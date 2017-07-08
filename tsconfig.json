@@ -1,8 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
+    "outDir": "./dist",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -16,5 +15,8 @@
       "es2016",
       "dom"
     ]
-  }
+  },
+  "files": [
+    "./src/app/ng-autocomplete/ng-autocomplete.ts"
+  ]
 }
