@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "",
     "outDir": "./dist",
     "sourceMap": true,
     "declaration": false,
@@ -15,8 +16,5 @@
       "es2016",
       "dom"
     ]
-  },
-  "files": [
-    "./src/app/ng-autocomplete/ng-autocomplete.ts"
-  ]
+  }
 }

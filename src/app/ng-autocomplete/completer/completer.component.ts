@@ -34,18 +34,22 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
     }
     .ng-autocomplete-dropdown .ng-autocomplete-inputs input {
         width: 100%;
-        padding: 6px 20px 6px 20px;
+        padding: 6px 20px;
+        font-family: Arial;
+        font-weight: normal;
+        outline: none !important;
+        font-size: 15px;
         height: 56px;
-        border: none;
+        border: 1px solid #e0e0e0;
     }
     .ng-autocomplete-dropdown .ng-autocomplete-inputs:after {
         content: '';
         display: block;
         width: 56px;
-        height: 56px;
         text-align: center;
         position: absolute;
         top: 0;
+        bottom: 0;
         right: 0;
         border-left: 1px solid #e0e0e0;
         pointer-events: none;
@@ -57,7 +61,10 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         position: absolute;
         margin: 3px;
         background-color: #fff;
-        padding: 15px 17px;
+        padding: 17px 18px;
+        font-family: Arial;
+        font-weight: normal;
+        font-size: 15px;
         width: calc(100% - 4px);
     }
     .ng-autocomplete-dropdown .ng-dropdown {
@@ -73,10 +80,13 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         display: block;
     }
     .ng-autocomplete-dropdown .ng-dropdown .dropdown-item {
-        height: 56px;
         width: 100%;
         cursor: pointer;
         padding: 18px 20px;
+        font-family: Arial;
+        font-weight: normal;
+        font-size: 15px;
+        height: 56px;
         background-color: #ffffff;
     }
     .ng-autocomplete-dropdown .ng-dropdown .dropdown-item:nth-child(odd) {
