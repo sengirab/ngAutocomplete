@@ -1,10 +1,16 @@
-# NgAutoComplete
+# NgAutoComplete / Example
 
 ![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo.gif)
 
 # Installation
 
 `npm i ng-auto-complete --save`
+
+# Styling !important
+First thing to note, i've created this package to be as simple as possible. That's why i don't include any styling,
+this is so you could style it the way you want it.
+
+If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ng-autocomplete/blob/master/src/styles.css) 
 
 # Usage
 
@@ -85,3 +91,47 @@ export class AppComponent {
 <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
                      [group]="group"></ng-autocomplete>
 ```
+
+#Remove selected values
+```typescript
+public selected: any[] = [];
+
+Selected(item: SelectedAutocompleteItem) {
+    this.selected.push(item.item);
+
+    /**
+     * Remove selected values from list,
+     * selected value must be of type: {id: string(based on GUID's), [value: string]: any}[]
+     */
+    this.completer.RemovableValues('completer', this.selected)
+}
+```
+
+#NgAutocompleteComponent Functions
+###Note:
+
+<p>I have made all NgAutocompleteComponent and CompleterComponent public, so you could do a lot more than i'll show you<p>
+<p>I've documented the functions of which i think their useful:<p>
+
+
+###Usage
+```typescript
+@ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+```
+
+| Left-aligned | Center-aligned |
+| :---         |     :---:      |
+| ResetCompleters()   | Resets all rendered completers |
+| FindCompleter(key: string)     | Find completer by assigned key |
+| RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
+
+#CompleterComponent Functions
+###Usage
+```typescript
+@ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+public input = this.completer.FindCompleter('completer');
+```
+
+| Left-aligned | Center-aligned |
+| :---         |     :---:      |
+| ClearValue()   | Clears found completer's input. |
