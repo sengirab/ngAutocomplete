@@ -1,3 +1,7 @@
+# NgAutoComplete
+
+![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo.gif)
+
 # Installation
 
 `npm i ng-auto-complete --save`
