@@ -1,6 +1,6 @@
 {
   "name": "ng-auto-complete",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "license": "MIT",
   "main": "ng-autocomplete.umd.js",
   "jsnext:main": "ng-autocomplete.esm.js",
@@ -22,9 +22,12 @@
     "@angular/common": "^4.0.0",
     "@angular/core": "^4.0.0",
     "@angular/forms": "^4.0.0",
-    "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
+    "rxjs": "^5.1.0"
   },
-  "devDependencies": {
+  "peerDependencies": {
+    "@angular/common": ">=4.0.0",
+    "@angular/core": ">=4.0.0",
+    "@angular/forms": ">=4.0.0",
+    "rxjs": ">=5.0.1"
   }
 }
