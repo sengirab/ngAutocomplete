@@ -106,11 +106,11 @@ Selected(item: SelectedAutocompleteItem) {
 ```
 
 #NgAutocompleteComponent Functions
+
 ###Note:
 
 <p>I have made all NgAutocompleteComponent and CompleterComponent public, so you could do a lot more than i'll show you<p>
 <p>I've documented the functions of which i think their useful:<p>
-
 
 ###Usage
 ```typescript
@@ -124,6 +124,7 @@ Selected(item: SelectedAutocompleteItem) {
 | RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
 
 #CompleterComponent Functions
+
 ###Usage
 ```typescript
 @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
