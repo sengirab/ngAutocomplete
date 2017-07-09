@@ -6,7 +6,7 @@ import {nameLibrary, PATH_DIST, PATH_SRC} from "./config-library.js";
 export default {
     entry: PATH_SRC + nameLibrary + '.ts',
     format: 'umd',
-    moduleName: nameLibrary,
+    moduleName: 'ngautocomplete',
     sourceMap: true,
     external: [
         '@angular/core'

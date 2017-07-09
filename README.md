@@ -6,7 +6,7 @@
 
 `npm i ng-auto-complete --save`
 
-## Usage
+# Usage
 
 #### app.module.ts
 ```typescript

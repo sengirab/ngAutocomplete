@@ -1,11 +1,11 @@
 {
   "name": "ng-auto-complete",
-  "version": "0.0.4",
+  "version": "0.0.9",
   "license": "MIT",
   "main": "ng-autocomplete.umd.js",
   "jsnext:main": "ng-autocomplete.esm.js",
-  "module": "ng-autocomplete.js",
-  "typings": "ng-autocomplete.d.ts",
+  "module": "ng-autocomplete.esm.js",
+  "types": "ng-autocomplete.d.ts",
   "scripts": {
   },
   "keywords": [

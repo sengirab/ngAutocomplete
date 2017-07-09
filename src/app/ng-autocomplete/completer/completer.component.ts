@@ -8,7 +8,7 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
     selector: 'ng-completer',
     template: `<div class="ng-autocomplete-dropdown">
 
-        GROUP: {{group.key}}
+        <!--GROUP: {{group.key}}-->
 
         <div class="ng-autocomplete-inputs">
             <span class="ng-autocomplete-placeholder" *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
