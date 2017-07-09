@@ -87,8 +87,7 @@ export class AppComponent {
 
 #### app.component.html
 ```html
-<ng-autocomplete (selected)="Selected($event)" [classes]="['']"
-                     [group]="group"></ng-autocomplete>
+<ng-autocomplete (selected)="Selected($event)" [classes]="['']" [group]="group"></ng-autocomplete>
 ```
 
 #Remove selected values
