@@ -90,7 +90,7 @@ export class AppComponent {
 <ng-autocomplete (selected)="Selected($event)" [classes]="['']" [group]="group"></ng-autocomplete>
 ```
 
-#Remove selected values
+# Remove selected values
 ```typescript
 public selected: any[] = [];
 
@@ -105,14 +105,14 @@ Selected(item: SelectedAutocompleteItem) {
 }
 ```
 
-#NgAutocompleteComponent Functions
+# NgAutocompleteComponent Functions
 
-###Note:
+### Note:
 
 <p>I have made all NgAutocompleteComponent and CompleterComponent public, so you could do a lot more than i'll show you<p>
 <p>I've documented the functions of which i think their useful:<p>
 
-###Usage
+### Usage
 ```typescript
 @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
 ```
@@ -123,9 +123,9 @@ Selected(item: SelectedAutocompleteItem) {
 | FindCompleter(key: string)     | Find completer by assigned key |
 | RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
 
-#CompleterComponent Functions
+# CompleterComponent Functions
 
-###Usage
+### Usage
 ```typescript
 @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
 public input = this.completer.FindCompleter('completer');
