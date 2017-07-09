@@ -37,9 +37,16 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                 if(!this._open)
                     this._open = true;
             });
+            this.ref.addEventListener('keydown', () => {
+                if(!this._open) {
+                    this._open = true;
+                }
+            });
 
-            this.ref.addEventListener('keydown', (event: KeyboardEvent) => {
-                this.keyDown(event);
+            document.addEventListener('keydown', (event: KeyboardEvent) => {
+                if(this._open) {
+                    this.keyDown(event);
+                }
             });
         }
 
@@ -282,6 +289,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         if (this.RefExists()) {
             this.ref.removeEventListener('focus');
             this.ref.removeEventListener('keydown');
+            document.removeEventListener('keydown');
         }
     }
 }

@@ -10,10 +10,10 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
 
         <!--GROUP: {{group.key}}-->
 
-        <div class="ng-autocomplete-inputs">
+        <div class="ng-autocomplete-inputs" (click)="RegisterClick()">
             <span class="ng-autocomplete-placeholder" *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
             <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer" (ngModelChange)="OnModelChange($event)"
-                   autocomplete="off">
+                   autocomplete="off" [ngClass]="{'completion-off': !group.completion}" [disabled]="!group.completion" (click)="RegisterClick()">
         </div>
 
         <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input"
@@ -29,6 +29,9 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
     styles: [`
         .ng-autocomplete-dropdown .ng-dropdown {
             display: none;
+        }
+        .ng-autocomplete-dropdown .ng-autocomplete-inputs input.completion-off {
+            cursor: pointer;
         }
         .ng-autocomplete-dropdown .ng-dropdown.open {
             display: block;
@@ -57,6 +60,15 @@ export class CompleterComponent implements OnInit {
      */
     ngOnInit() {
         this.SetItems();
+    }
+
+    /**
+     * Only used when completion is off.
+     * @constructor
+     */
+    RegisterClick() {
+        if(!this.group.completion)
+            this.dropdown._open = true;
     }
 
     /**

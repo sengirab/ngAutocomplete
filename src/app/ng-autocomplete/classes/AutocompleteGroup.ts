@@ -10,6 +10,7 @@ export class AutocompleteGroup {
     remove: string[];
     placeholder: string;
     parent: string;
+    completion: boolean;
 
     private removals: string[] = [];
     private _copy: AutocompleteItem[] = [];
@@ -68,7 +69,7 @@ export class AutocompleteGroup {
 
 }
 
-export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = ''): AutocompleteGroup {
+export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
     const group = new AutocompleteGroup();
 
     group.key = key;
@@ -76,6 +77,7 @@ export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, 
     group.value = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, keys.titleKey, keys.childrenKey));
     group.placeholder = placeholder;
     group.parent = parent;
+    group.completion = completion;
 
     /**
      * Initial value needed, if we empty search box or want to clear it, it needs to be reset.
