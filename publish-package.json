@@ -1,0 +1,30 @@
+{
+  "name": "ng-auto-complete",
+  "version": "0.0.3",
+  "license": "MIT",
+  "main": "ng-autocomplete.umd.js",
+  "jsnext:main": "ng-autocomplete.esm.js",
+  "module": "ng-autocomplete.js",
+  "typings": "ng-autocomplete.d.ts",
+  "scripts": {
+  },
+  "keywords": [
+    "angular2",
+    "ng",
+    "ng2",
+    "ng-autocomplete",
+    "autocomplete",
+    "ng-dropdown",
+    "dropdown",
+    "angular dropdown"
+  ],
+  "dependencies": {
+    "@angular/common": "^4.0.0",
+    "@angular/core": "^4.0.0",
+    "@angular/forms": "^4.0.0",
+    "rxjs": "^5.1.0",
+    "zone.js": "^0.8.4"
+  },
+  "devDependencies": {
+  }
+}

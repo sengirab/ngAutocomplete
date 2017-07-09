@@ -5,10 +5,10 @@ import {CompleterComponent} from "./completer/completer.component";
 import {ReturnStringArrayByID} from "./utils/utils";
 
 @Component({
-    selector: 'app-ng-autocomplete',
+    selector: 'ng-autocomplete',
     template: `
-        <app-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)" (selected)="ListenToSelected($event)"
-                       [group]="item"></app-completer>
+        <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)" (selected)="ListenToSelected($event)"
+                       [group]="item"></ng-completer>
     `
 })
 export class NgAutocompleteComponent implements OnInit {

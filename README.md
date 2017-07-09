@@ -1,28 +1,83 @@
-# NgAutoComplete
+# Installation
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.2.
+`npm i ng-auto-complete --save`
 
-## Development server
+## Usage
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+#### app.module.ts
+```typescript
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
 
-## Code scaffolding
+import {AppComponent} from "./app.component";
+import {NgAutoCompleteModule} from "ng-auto-complete";
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        NgAutoCompleteModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule {
+}
+```
 
-## Build
+#### app.component.ts
+```typescript
+import {Component, ViewChild} from "@angular/core";
+import {CreateNewAutocompleteGroup, SelectedAutocompleteItem} from "ng-auto-complete";
+import {NgAutocompleteComponent} from "ng-auto-complete/ng-autocomplete.component";
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+})
+export class AppComponent {
+    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    
+    public group = [
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'completer',
+            [
+                {title: 'Option 1', id: '1'},
+                {title: 'Option 2', id: '2'},
+                {title: 'Option 3', id: '3'},
+                {title: 'Option 4', id: '4'},
+                {title: 'Option 5', id: '5'},
+            ],
+            {titleKey: 'title', childrenKey: null}
+        ),
+    ];
 
-## Running unit tests
+    constructor() {
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    }
 
-## Running end-to-end tests
+    /**
+     *
+     * @param item
+     * @constructor
+     */
+    Selected(item: SelectedAutocompleteItem) {
+        console.log(item);
+    }
+}
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+```
 
-## Further help
+#### app.component.html
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```html
+<ng-autocomplete (selected)="Selected($event)" [classes]="['']"
+                     [group]="group"></ng-autocomplete>
+```

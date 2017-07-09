@@ -1,10 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "",
     "outDir": "./dist",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -16,5 +15,8 @@
       "es2016",
       "dom"
     ]
-  }
+  },
+  "files": [
+    "./src/app/ng-autocomplete/ng-autocomplete.ts"
+  ]
 }

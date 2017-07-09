@@ -10,7 +10,21 @@ export class AppComponent {
     public group = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'completer_one',
+            'One auto completer',
+            [
+                {title: 'Option 4', id: '1'},
+                {title: 'Option 5', id: '2'},
+                {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: '4'},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: '6'},
+            ],
+            {titleKey: 'title', childrenKey: null},
+            'completer_one'
+        ),
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'Auto completer with children',
             [
                 {
                     title: 'Option 1', id: '1',
@@ -39,7 +53,7 @@ export class AppComponent {
         ),
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'completer_two',
+            'Auto completer, child of.',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
@@ -49,7 +63,7 @@ export class AppComponent {
                 {title: 'Option 9', id: '6'},
             ],
             {titleKey: 'title', childrenKey: null},
-            'completer_one'
+            'Auto completer with children'
         )
     ];
 
