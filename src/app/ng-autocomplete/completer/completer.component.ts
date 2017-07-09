@@ -25,7 +25,15 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
                 {{item.title}}
             </div>
         </div>
-    </div>`
+    </div>`,
+    styles: [`
+        .ng-autocomplete-dropdown .ng-dropdown {
+            display: none;
+        }
+        .ng-autocomplete-dropdown .ng-dropdown.open {
+            display: block;
+        }
+    `]
 })
 export class CompleterComponent implements OnInit {
     @ViewChild(NgDropdownDirective) public dropdown: NgDropdownDirective;
