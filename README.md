@@ -161,7 +161,7 @@ public group = [
                 ]
             },
         ],
-        {titleKey: 'title', childrenKey: null},
+        {titleKey: 'title', childrenKey: 'children'},
         ''
     ),
     CreateNewAutocompleteGroup(
