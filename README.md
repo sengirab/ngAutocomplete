@@ -1,4 +1,7 @@
 # NgAutoComplete / Example
+Light-weight autocomplete component for Angular2.
+
+https://github.com/sengirab/ng-autocomplete
 
 ![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo.gif)
 
