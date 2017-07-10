@@ -109,47 +109,73 @@ In some cases you may want to disable auto completion. e.g you want a html selec
 ### Example
 ![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo2.gif)
 ### Usage
-```typescript
-import {Component, ViewChild} from "@angular/core";
-import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutocompleteComponent} from "ng-auto-complete";
-
-@Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-})
-export class AppComponent {
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
-    
-    public group = [
-        CreateNewAutocompleteGroup(
-            'Search / choose in / from list',
-            'completer',
-            [
-                {title: 'Option 1', id: '1'},
-                {title: 'Option 2', id: '2'},
-                {title: 'Option 3', id: '3'},
-                {title: 'Option 4', id: '4'},
-                {title: 'Option 5', id: '5'},
-            ],
-            {titleKey: 'title', childrenKey: null}
-        ),
+```typescript    
+public group = [
+    CreateNewAutocompleteGroup(
+        'Search / choose in / from list',
+        'completer',
+        [
+            {title: 'Option 1', id: '1'},
+            {title: 'Option 2', id: '2'},
+            {title: 'Option 3', id: '3'},
+            {title: 'Option 4', id: '4'},
+            {title: 'Option 5', id: '5'},
+        ],
+        {titleKey: 'title', childrenKey: null},
         '',
         false
-    ];
+    )
+];
+```
 
-    constructor() {
-
-    }
-
-    /**
-     *
-     * @param item
-     * @constructor
-     */
-    Selected(item: SelectedAutocompleteItem) {
-        console.log(item);
-    }
-}
+# With children
+### Usage
+```typescript    
+public group = [
+    CreateNewAutocompleteGroup(
+        'Search / choose in / from list',
+        'completer_one',
+        [
+            {
+                title: 'Option 1', id: '1',
+                children: [
+                    {title: 'Option 1', id: '1'},
+                    {title: 'Option 2', id: '2'}
+                ]
+            },
+            {
+                title: 'Option 2', id: '2',
+                children: [
+                    {title: 'Option 3', id: '3'},
+                    {title: 'Option 4', id: '4'}
+                ]
+            },
+            {
+                title: 'Option 3', id: '3',
+                children: [
+                    {title: 'Option 5', id: '5'},
+                    {title: 'Option 6', id: '6'}
+                ]
+            },
+        ],
+        {titleKey: 'title', childrenKey: null},
+        ''
+    ),
+    CreateNewAutocompleteGroup(
+        'Search / choose in / from list',
+        'completer_two',
+        [
+            {title: 'Option 1', id: '1'},
+            {title: 'Option 2', id: '2'},
+            {title: 'Option 3', id: '3'},
+            {title: 'Option 4', id: '4'},
+            {title: 'Option 5', id: '5'},
+            {title: 'Option 6', id: '6'},
+        ],
+        {titleKey: 'title', childrenKey: null},
+        'completer_one'
+    )
+];
 ```
 
 # NgAutocompleteComponent Functions
