@@ -57,6 +57,11 @@ export class AutocompleteGroup {
      */
     InitialValue() {
         this.value = FilterRemovals(this.removals, this.initialValue);
+
+        /**
+         *
+         */
+        this.SetCopy(this.initialValue);
     }
 
     /**
