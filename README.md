@@ -182,7 +182,7 @@ public group = [
 
 ### Note:
 
-<p>I have made all NgAutocompleteComponent and CompleterComponent public, so you could do a lot more than i'll show you<p>
+<p>I have made all NgAutocompleteComponent and CompleterComponent functions public, so you could do a lot more than i'll show you<p>
 <p>I've documented the functions of which i think their useful:<p>
 
 ### Usage

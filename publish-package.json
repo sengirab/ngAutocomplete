@@ -6,8 +6,7 @@
   "jsnext:main": "ng-autocomplete.esm.js",
   "module": "ng-autocomplete.esm.js",
   "types": "ng-autocomplete.d.ts",
-  "scripts": {
-  },
+  "description": "Light-weight autocomplete component for Angular2.",
   "keywords": [
     "angular2",
     "ng",
