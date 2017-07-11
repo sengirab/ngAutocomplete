@@ -1,11 +1,3 @@
-<div class="fifty">
-    <p (click)="CompleterOneINIT()">INITIAL 1 SELECT</p>
-</div>
-
-<div class="fifty">
-    <p (click)="CompleterTwoINIT()">INITIAL 2 SELECT</p>
-</div>
-
 <ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
                      [group]="group1" [key]="'group1'"></ng-autocomplete>
 

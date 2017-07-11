@@ -170,6 +170,7 @@ export class CompleterComponent implements OnInit {
      */
     ClearValue() {
         this._completer = '';
+        this._DOM.selected = null;
 
         /**
          *

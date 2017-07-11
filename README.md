@@ -7,6 +7,10 @@ https://github.com/sengirab/ng-autocomplete
 
 # Changelog - (Read before updating.)
 
+## [1.1.2] - 2017-07-11.
+- Fixed an issue; when selecting a option from a completer that is parent, active child option didn't reset.
+- Updated README.md.
+
 ## [1.1.1] - 2017-07-11.
 ### New Functionality.
 - SelectItem(key: string, id: string)
@@ -16,7 +20,7 @@ https://github.com/sengirab/ng-autocomplete
       @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
       this.completer.SelectItem('completer', '1');
     ```
-    #### Or if multiple completers in component.
+    ### Or if multiple completers in component.
     ```typescript
       @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
 
@@ -185,7 +189,7 @@ public group = [
 
 # With children
 ### Usage
-```typescript    
+```typescript
 public group = [
     CreateNewAutocompleteGroup(
         'Search / choose in / from list',
@@ -283,7 +287,8 @@ export class AppComponent implements OnInit {
      * @constructor
      */
     Selected(item: SelectedAutocompleteItem) {
-        (<FormArray>this.form.controls['items']).push(new FormArray(item.item.original));
+        this.form.controls['items'] = this._fb.array([...this.form.controls['items'].value, item.item.original]);
+       
         console.log(item);
     }
 }
@@ -308,6 +313,7 @@ export class AppComponent implements OnInit {
 | ResetInputs()   | Resets all rendered completer inputs |
 | FindInput(key: string)     | Find completer input by assigned key |
 | RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
+| SelectItem(key: string, id: string) | e.g set an initial value on the completers input |
 
 # CompleterComponent Functions
 

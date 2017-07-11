@@ -13,39 +13,46 @@ export class AppComponent implements AfterViewInit {
     public group1 = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'completer_one',
+            'Completer with children',
             [
-                {title: 'Option 4', id: '1', children: [
+                {title: 'Option 1', id: '1', children: [
+                    {title: 'Option 4', id: '1'},
+                    {title: 'Option 5', id: '2'},
+                    {title: 'Option 6', id: '3'},
+                ]},
+                {title: 'Option 2', id: '2', children: [
                     {title: 'Option 7', id: '1'},
+                    {title: 'Option 8', id: '2'},
+                    {title: 'Option 9', id: '3'},
                 ]},
-                {title: 'Option 5', id: '2', children: [
-                    {title: 'Option 8', id: '1'},
-                ]},
-                {title: 'Option 6', id: '3', children: [
-                    {title: 'Option 9', id: '1'},
+                {title: 'Option 3', id: '3', children: [
+                    {title: 'Option 10', id: '1'},
+                    {title: 'Option 11', id: '2'},
+                    {title: 'Option 12', id: '3'},
                 ]},
             ],
-            {titleKey: 'title', childrenKey: 'children'},
-            ''
+            {titleKey: 'title', childrenKey: 'children'}
         ),
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'completer_two',
+            'Completer listening to parent with children',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
                 {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: '4'},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: '6'},
             ],
             {titleKey: 'title', childrenKey: null},
-            'completer_one',
-            false
+            'Completer with children',
         ),
     ];
 
     public group2 = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'completer_one',
+            'Normal completer',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
@@ -56,6 +63,21 @@ export class AppComponent implements AfterViewInit {
             ],
             {titleKey: 'title', childrenKey: null},
             ''
+        ),
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'Disabled completer, only selectable values.',
+            [
+                {title: 'Option 4', id: '1'},
+                {title: 'Option 5', id: '2'},
+                {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: '4'},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: '6'},
+            ],
+            {titleKey: 'title', childrenKey: null},
+            '',
+            false
         ),
     ];
 
@@ -77,23 +99,5 @@ export class AppComponent implements AfterViewInit {
      */
     Selected(item: SelectedAutocompleteItem) {
         console.log(item);
-    }
-
-    /**
-     *
-     * @constructor
-     */
-    CompleterOneINIT() {
-        const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
-        completer.SelectItem('completer_one', '3');
-    }
-
-    /**
-     *
-     * @constructor
-     */
-    CompleterTwoINIT() {
-        const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
-        completer.SelectItem('completer_two', '1');
     }
 }
