@@ -16,7 +16,7 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
                    autocomplete="off" [ngClass]="{'completion-off': !group.completion}" [disabled]="!group.completion" (click)="RegisterClick()">
         </div>
 
-        <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input"
+        <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected"
              (hover)="OnHoverDropdownItem($event)"
              (selected)="SelectItem($event)"
              (closed)="OnInputBlurred()"
@@ -49,7 +49,8 @@ export class CompleterComponent implements OnInit {
     _completer: string = '';
 
     _DOM = {
-        placeholder: <string>''
+        placeholder: <string>'',
+        selected: <AutocompleteItem>null
     };
 
     constructor() {
@@ -90,6 +91,7 @@ export class CompleterComponent implements OnInit {
          *
          */
         this.dropdown.Close(null, true);
+        this._DOM.selected = item;
         this.selected.emit({group: this.group, item: item});
     }
 
@@ -102,6 +104,7 @@ export class CompleterComponent implements OnInit {
         this._completer = value;
 
         if (value.length === 0) {
+            this._DOM.selected = null;
             this.cleared.emit(this.group.key);
         }
 

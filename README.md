@@ -7,6 +7,23 @@ https://github.com/sengirab/ng-autocomplete
 
 # Changelog - (Read before updating.)
 
+## [1.1.1] - 2017-07-11.
+### New Functionality.
+- SelectItem(key: string, id: string)
+    - NgAutocompleteComponent function - Set value manual, by id. This can be useful when the list is loaded
+    but there's a value set in the database. When the data is fetched from server, this method can be used.
+    ```typescript
+      @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+      this.completer.SelectItem('completer', '1');
+    ```
+    #### Or if multiple completers in component.
+    ```typescript
+      @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+
+      const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
+      completer.SelectItem('completer', '1');
+    ```
+    
 ## [1.0.1] - 2017-07-11.
 - Only groups with parents did a reset when the input reached a length <= 0. Now all inputs do, input with parents still get set to initial value.
 
@@ -297,7 +314,7 @@ export class AppComponent implements OnInit {
 ### Usage
 ```typescript
 @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
-public input = this.completer.FindCompleter('completer');
+public input = this.completer.FindInput('completer');
 ```
 
 | Left-aligned | Center-aligned |

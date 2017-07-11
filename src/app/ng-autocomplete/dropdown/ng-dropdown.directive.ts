@@ -15,6 +15,7 @@ import {
 })
 export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     @Input() public list: any[] = [];
+    @Input() public active: any = null;
     @Input() public ref: Element = null;
 
     @Output() public hover: EventEmitter<any> = new EventEmitter<any>();
@@ -65,6 +66,9 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         if (typeof changes['open'] !== 'undefined') {
             this._open = changes['open'].currentValue
         }
+        if (typeof changes['active'] !== 'undefined' && !changes['active'].firstChange) {
+            this.PrepareList();
+        }
         if (typeof changes['list'] !== 'undefined') {
             this.list = changes['list'].currentValue;
 
@@ -82,6 +86,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     keyDown(event: KeyboardEvent) {
         event.stopImmediatePropagation();
         event.stopPropagation();
+
         /**
          *
          */
@@ -241,7 +246,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this._list = this.list.map((item) => {
             return {
                 item: item,
-                active: false
+                active: this.ActiveItem(item)
             }
         });
 
@@ -253,19 +258,47 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
+     * @param item
+     * @returns {boolean}
+     * @constructor
+     */
+    ActiveItem(item: any) {
+        return this.active !== null && item.id === this.active.id;
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    DetermineActiveClass() {
+       this._list.forEach((item, index) => {
+           this._eref.nativeElement.children[index].classList.remove('active');
+
+           /**
+            *
+            */
+           if(item.active)
+               this._eref.nativeElement.children[index].classList.add('active');
+       })
+    }
+
+    /**
+     *
      * @constructor
      */
     PrepareChildrenList() {
         setTimeout(() => {
             const list = this._eref.nativeElement.children;
+            for (let i = 0; i < list.length; i++) {
+                list[i].id = this._class + i;
+            }
 
             /**
              *
              */
-            for (let i = 0; i < list.length; i++) {
-                list[i].id = this._class + i;
-            }
+            this.DetermineActiveClass();
         }, 0)
+
     };
 
     /**

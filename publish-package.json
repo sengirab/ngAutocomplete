@@ -1,6 +1,6 @@
 {
   "name": "ng-auto-complete",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "license": "MIT",
   "main": "ng-autocomplete.umd.js",
   "jsnext:main": "ng-autocomplete.esm.js",

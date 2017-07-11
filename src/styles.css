@@ -450,10 +450,6 @@ template {
     display: none;
 }
 
-.fifty:first-child {
-    float: none;
-}
-
 .fifty {
     width: 50%;
     float: left;

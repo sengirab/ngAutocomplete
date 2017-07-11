@@ -137,6 +137,25 @@ export class NgAutocompleteComponent implements OnInit {
     /**
      *
      * @param key
+     * @param id
+     * @constructor
+     */
+    SelectItem(key: string, id: string) {
+        const completer = this.FindInput(key);
+
+        /**
+         *
+         */
+        completer._items.forEach((item) => {
+            if(item.id === id) {
+                completer.SelectItem(item);
+            }
+        })
+    }
+
+    /**
+     *
+     * @param key
      * @param ids
      * @constructor
      */
