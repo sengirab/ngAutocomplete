@@ -165,9 +165,15 @@ export class NgAutocompleteComponent implements OnInit {
      *
      * @constructor
      */
-    static FindCompleter(key: string, list: QueryList<NgAutocompleteComponent>) {
-        return list.filter((completer: NgAutocompleteComponent) => {
+    static FindCompleter(key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent {
+        const completer = list.filter((completer: NgAutocompleteComponent) => {
             return key === completer.key;
-        })[0];
+        });
+
+        if(typeof completer[0] !== 'undefined') {
+            return completer[0]
+        }
+
+        return null
     }
 }
