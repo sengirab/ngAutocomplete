@@ -17,7 +17,7 @@ https://github.com/sengirab/ng-autocomplete
 
 ### New Functionality.
 - <ng-autocomplete [key]="'group1'"></ng-autocomplete> - Added key on component.
-- FindCompleter (not to be confused with the old FindCompleter, now FindInput)
+- static FindCompleter usage (NgAutocompleteComponent.FindCompleter()) (not to be confused with the old FindCompleter, now FindInput)
     - (key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent. This can be useful when you have multiple ng-autocomplete components
     in one component. Note that this  can only be used when the view has been init.
 
@@ -268,6 +268,7 @@ export class AppComponent implements OnInit {
 
 | Left-aligned | Center-aligned |
 | :---         |     :---:      |
+| FindCompleter((key: string, list: QueryList<NgAutocompleteComponent>)) (Static function) | Finds completer |
 | ResetInputs()   | Resets all rendered completer inputs |
 | FindInput(key: string)     | Find completer input by assigned key |
 | RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
