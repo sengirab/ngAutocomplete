@@ -7,6 +7,9 @@ https://github.com/sengirab/ng-autocomplete
 
 # Changelog - (Read before updating.)
 
+## [1.0.1] - 2017-07-11.
+- Only groups with parents did a reset when the input reached a length <= 0. Now all inputs do, input with parents still get set to initial value.
+
 ## [1.0.0] - 2017-07-11. Releasing since it's being used.
 ### Renamed Functions.
 
@@ -25,11 +28,27 @@ https://github.com/sengirab/ng-autocomplete
 
 `npm i ng-auto-complete --save`
 
-# Styling !important
+# Styling !Important
 First thing to note, i've created this package to be as simple as possible. That's why i don't include any styling,
 this is so you could style it the way you want it.
 
 If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ng-autocomplete/blob/master/src/styles.css) 
+
+# Responses !Important
+#### Response when selected
+```json
+"{group: AutocompleteGroup, item: AutocompleteItem}"
+```
+#### Response when cleared
+```json
+"{group: AutocompleteGroup, item: null}"
+```
+Note that when calling completer.ResetInput('completer'), this will clear the input. This means that the
+completer will emit `{group: AutocompleteGroup, item: null}`. If your listening to this within your component
+keep in mind that each clear the item will be null
+
+The input will also emit "null" when the input reaches a length of `<= 0`.
+
 
 # Usage
 

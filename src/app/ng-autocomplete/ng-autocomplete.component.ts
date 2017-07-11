@@ -49,12 +49,15 @@ export class NgAutocompleteComponent implements OnInit {
      */
     InputCleared(key: string) {
         this.group.forEach((group) => {
+            if(group.key === key) {
+                this.ResetInput(group.key);
+            }
+
+            /**
+             *
+             */
             if (group.parent === key) {
                 this.ResetInput(group.key);
-
-                /**
-                 *
-                 */
                 group.InitialValue();
             }
         });
