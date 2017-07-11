@@ -5,6 +5,22 @@ https://github.com/sengirab/ng-autocomplete
 
 ![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo.gif)
 
+# Changelog - (Read before updating.)
+
+## [1.0.0] - 2017-07-11. Releasing since it's being used.
+### Renamed Functions.
+
+- ResetCompleters to ResetInputs.
+- ResetCompleter to ResetInput.
+- FindCompleter to FindInput.
+- TriggerChangeCompleters to TriggerChange.
+
+### New Functionality.
+- <ng-autocomplete [key]="'group1'"></ng-autocomplete> - Added key on component.
+- FindCompleter (not to be confused with the old FindCompleter, now FindInput)
+    - (key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent. This can be useful when you have multiple ng-autocomplete components
+    in one component. Note that this  can only be used when the view has been init.
+
 # Installation
 
 `npm i ng-auto-complete --save`
@@ -181,6 +197,63 @@ public group = [
 ];
 ```
 
+# Within a form
+
+### Usage:
+```typescript
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutocompleteComponent} from "ng-auto-complete";
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+})
+export class AppComponent implements OnInit {
+    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    
+    public form: FormGroup;
+    public group = [
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'completer',
+            [
+                {title: 'Option 1', id: '1'},
+                {title: 'Option 2', id: '2'},
+                {title: 'Option 3', id: '3'},
+                {title: 'Option 4', id: '4'},
+                {title: 'Option 5', id: '5'},
+            ],
+            {titleKey: 'title', childrenKey: null}
+        ),
+    ];
+
+    constructor(private _fb: FormBuilder) {
+
+    }
+    
+    /**
+     *
+     */
+    ngOnInit() {
+        this.form = this._fb.group({
+            items: new FormArray([])
+        });
+    }
+
+    /**
+     *
+     * @param item
+     * @constructor
+     */
+    Selected(item: SelectedAutocompleteItem) {
+        (<FormArray>this.form.controls['items']).push(new FormArray(item.item.original));
+        console.log(item);
+    }
+}
+```
+
+
 # NgAutocompleteComponent Functions
 
 ### Note:
@@ -195,8 +268,8 @@ public group = [
 
 | Left-aligned | Center-aligned |
 | :---         |     :---:      |
-| ResetCompleters()   | Resets all rendered completers |
-| FindCompleter(key: string)     | Find completer by assigned key |
+| ResetInputs()   | Resets all rendered completer inputs |
+| FindInput(key: string)     | Find completer input by assigned key |
 | RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
 
 # CompleterComponent Functions

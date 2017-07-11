@@ -7,8 +7,9 @@ import {ReturnStringArrayByID} from "./utils/utils";
 @Component({
     selector: 'ng-autocomplete',
     template: `
-        <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)" (selected)="ListenToSelected($event)"
-                       [group]="item"></ng-completer>
+        <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)"
+                      (selected)="ListenToSelected($event)"
+                      [group]="item"></ng-completer>
     `
 })
 export class NgAutocompleteComponent implements OnInit {
@@ -16,6 +17,7 @@ export class NgAutocompleteComponent implements OnInit {
     @Output() public selected: EventEmitter<SelectedAutocompleteItem> = new EventEmitter<SelectedAutocompleteItem>();
 
     @Input() public group: AutocompleteGroup[] = [];
+    @Input() public key: string = '';
     @Input() public classes: string[] = [];
 
     constructor() {
@@ -48,7 +50,7 @@ export class NgAutocompleteComponent implements OnInit {
     InputCleared(key: string) {
         this.group.forEach((group) => {
             if (group.parent === key) {
-                this.ResetCompleter(group.key);
+                this.ResetInput(group.key);
 
                 /**
                  *
@@ -60,7 +62,7 @@ export class NgAutocompleteComponent implements OnInit {
         /**
          * Items may have changed, need to te re-set list in completer components.
          */
-        this.TriggerChangeCompleters()
+        this.TriggerChange()
     }
 
     /**
@@ -72,7 +74,7 @@ export class NgAutocompleteComponent implements OnInit {
         this.group.forEach((item) => {
 
             if (item.parent == selected.group.key) {
-                this.ResetCompleter(item.key);
+                this.ResetInput(item.key);
 
                 /**
                  *
@@ -86,14 +88,14 @@ export class NgAutocompleteComponent implements OnInit {
         /**
          * Items may have changed, need to te re-set list in completer components.
          */
-        this.TriggerChangeCompleters()
+        this.TriggerChange()
     }
 
     /**
      *
      * @constructor
      */
-    TriggerChangeCompleters() {
+    TriggerChange() {
         this.completers.forEach((completer) => {
             completer.SetItems();
         })
@@ -109,7 +111,7 @@ export class NgAutocompleteComponent implements OnInit {
      * @returns {CompleterComponent}
      * @constructor
      */
-    FindCompleter(key: string): CompleterComponent {
+    FindInput(key: string): CompleterComponent {
         return this.completers.reduce((result, completer) => {
             if (completer.group.key === key) {
                 result = completer;
@@ -124,8 +126,8 @@ export class NgAutocompleteComponent implements OnInit {
      * @param key
      * @constructor
      */
-    ResetCompleter(key: string) {
-        const completer = this.FindCompleter(key);
+    ResetInput(key: string) {
+        const completer = this.FindInput(key);
         completer.ClearValue();
     }
 
@@ -136,22 +138,36 @@ export class NgAutocompleteComponent implements OnInit {
      * @constructor
      */
     RemovableValues(key: string, ids: { id: string, [value: string]: any }[]) {
-        const completer = this.FindCompleter(key);
+        const completer = this.FindInput(key);
         completer.group.Removables(ReturnStringArrayByID(ids));
 
         /**
          * Items may have changed, need to te re-set list in completer components.
          */
-        this.TriggerChangeCompleters()
+        this.TriggerChange()
     }
 
     /**
      *
      * @constructor
      */
-    ResetCompleters() {
+    ResetInputs() {
         this.group.forEach((item) => {
-            this.ResetCompleter(item.key);
+            this.ResetInput(item.key);
         });
+    }
+
+    // =======================================================================//
+    // ! Static (utils)                                                       //
+    // =======================================================================//
+
+    /**
+     *
+     * @constructor
+     */
+    static FindCompleter(key: string, list: QueryList<NgAutocompleteComponent>) {
+        return list.filter((completer: NgAutocompleteComponent) => {
+            return key === completer.key;
+        })[0];
     }
 }
