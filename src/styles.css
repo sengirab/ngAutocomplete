@@ -446,6 +446,10 @@ template {
  * Add the correct display in IE 10-.
  */
 
+body {
+    height: 5000px;
+}
+
 [hidden] {
     display: none;
 }

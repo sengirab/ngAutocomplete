@@ -6,33 +6,39 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
 
 @Component({
     selector: 'ng-completer',
-    template: `<div class="ng-autocomplete-dropdown">
+    template: `
+        <div class="ng-autocomplete-dropdown">
 
-        <!--GROUP: {{group.key}}-->
+            <!--GROUP: {{group.key}}-->
 
-        <div class="ng-autocomplete-inputs" (click)="RegisterClick()">
-            <span class="ng-autocomplete-placeholder" *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
-            <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer" (ngModelChange)="OnModelChange($event)"
-                   autocomplete="off" [ngClass]="{'completion-off': !group.completion}" [disabled]="!group.completion" (click)="RegisterClick()">
-        </div>
-
-        <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected"
-             (hover)="OnHoverDropdownItem($event)"
-             (selected)="SelectItem($event)"
-             (closed)="OnInputBlurred()"
-        >
-            <div class="dropdown-item" *ngFor="let item of _items; let i = index" (click)="SelectItem(item)">
-                {{item.title}}
+            <div class="ng-autocomplete-inputs" (click)="RegisterClick()">
+                <span class="ng-autocomplete-placeholder"
+                      *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
+                <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
+                       (ngModelChange)="OnModelChange($event)"
+                       autocomplete="off" [ngClass]="{'completion-off': !group.completion}"
+                       [disabled]="!group.completion" (click)="RegisterClick()" (focus)="OpenDropdown()">
             </div>
-        </div>
-    </div>`,
+
+            <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected"
+                 (hover)="OnHoverDropdownItem($event)"
+                 (selected)="SelectItem($event)"
+                 (closed)="OnInputBlurred()"
+            >
+                <div class="dropdown-item" *ngFor="let item of _items; let i = index" (click)="SelectItem(item)">
+                    {{item.title}}
+                </div>
+            </div>
+        </div>`,
     styles: [`
         .ng-autocomplete-dropdown .ng-dropdown {
             display: none;
         }
+
         .ng-autocomplete-dropdown .ng-autocomplete-inputs input.completion-off {
             cursor: pointer;
         }
+
         .ng-autocomplete-dropdown .ng-dropdown.open {
             display: block;
         }
@@ -68,7 +74,17 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     RegisterClick() {
-        if(!this.group.completion) {
+        if (!this.group.completion) {
+            this.OpenDropdown()
+        }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    OpenDropdown() {
+        if (!this.dropdown._open) {
             this.dropdown._open = true;
 
             /**

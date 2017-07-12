@@ -6,6 +6,12 @@ https://github.com/sengirab/ngAutocomplete
 ![](https://raw.githubusercontent.com/sengirab/ngAutocomplete/master/demo.gif)
 
 # Changelog - (Read before updating.)
+## [1.1.6] - 2017-07-12.
+- KeyEvents now preventDefault
+- Close dropdown on tab.
+- Open dropdown on focus - was only on click.
+- Updated README.md.
+
 ## [1.1.5] - 2017-07-12.
 - Maintain active option when input is blurred - also for disabled completion inputs now.
 - Updated README.md.

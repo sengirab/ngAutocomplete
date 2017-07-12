@@ -46,16 +46,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                     this.PrepareList();
                 }
             });
-            this.ref.addEventListener('keydown', () => {
-                if (!this._open) {
-                    this._open = true;
-
-                    /**
-                     *
-                     */
-                    this.PrepareList();
-                }
-            });
 
             document.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (this._open) {
@@ -104,20 +94,41 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             case 'ArrowDown':
                 this.SetActive(this.FindActive() + 1);
                 if (!this._open) {
-                    this._open = true
+                    this._open = true;
+
+                    /**
+                     *
+                     */
+                    this.PrepareList();
                 }
+
+                event.preventDefault();
                 break;
             case 'ArrowUp':
                 this.SetActive(this.FindActive() - 1);
                 if (!this._open) {
-                    this._open = true
+                    this._open = true;
+
+                    /**
+                     *
+                     */
+                    this.PrepareList();
                 }
+
+                event.preventDefault();
                 break;
             case 'Enter':
                 this.selected.emit(this.DeReference(this._list[this.FindActive()]));
                 this.Close(null, true);
+
+                event.preventDefault();
                 break;
             case 'Escape':
+                this.Close(null, true);
+
+                event.preventDefault();
+                break;
+            case 'Tab':
                 this.Close(null, true);
                 break;
             default:
@@ -331,7 +342,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.RefExists()) {
             this.ref.removeEventListener('focus');
-            this.ref.removeEventListener('keydown');
             document.removeEventListener('keydown');
         }
     }
