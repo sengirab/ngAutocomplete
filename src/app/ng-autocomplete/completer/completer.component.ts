@@ -124,7 +124,6 @@ export class CompleterComponent implements OnInit {
      */
     OnInputBlurred() {
         if (!this.HasChosenValue()) {
-
             /**
              * Let component know completer input has been cleared -
              * this function shows the list again, also resets children, if chosen.

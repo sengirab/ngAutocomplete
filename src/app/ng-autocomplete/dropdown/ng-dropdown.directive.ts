@@ -1,12 +1,14 @@
 import {
     Directive,
-    ElementRef, EventEmitter,
+    ElementRef,
+    EventEmitter,
     HostBinding,
     HostListener,
     Input,
     OnChanges,
     OnDestroy,
-    OnInit, Output,
+    OnInit,
+    Output,
     SimpleChanges
 } from "@angular/core";
 
@@ -35,17 +37,27 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         if (this.RefExists()) {
             this.ref.addEventListener('click', () => {
-                if(!this._open)
+                if (!this._open) {
                     this._open = true;
+                    /**
+                     *
+                     */
+                    this.PrepareList();
+                }
             });
             this.ref.addEventListener('keydown', () => {
-                if(!this._open) {
+                if (!this._open) {
                     this._open = true;
+
+                    /**
+                     *
+                     */
+                    this.PrepareList();
                 }
             });
 
             document.addEventListener('keydown', (event: KeyboardEvent) => {
-                if(this._open) {
+                if (this._open) {
                     this.keyDown(event);
                 }
             });
@@ -63,9 +75,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @param changes
      */
     ngOnChanges(changes: SimpleChanges) {
-        if (typeof changes['open'] !== 'undefined') {
-            this._open = changes['open'].currentValue
-        }
         if (typeof changes['active'] !== 'undefined' && !changes['active'].firstChange) {
             this.PrepareList();
         }
@@ -93,13 +102,13 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         switch (event.code) {
             case 'ArrowDown':
                 this.SetActive(this.FindActive() + 1);
-                if(!this._open) {
+                if (!this._open) {
                     this._open = true
                 }
                 break;
             case 'ArrowUp':
                 this.SetActive(this.FindActive() - 1);
-                if(!this._open) {
+                if (!this._open) {
                     this._open = true
                 }
                 break;
@@ -166,7 +175,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             this.closed.emit();
         };
 
-        if(force) {
+        if (force) {
             close();
             return;
         }
@@ -271,15 +280,15 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     DetermineActiveClass() {
-       this._list.forEach((item, index) => {
-           this._eref.nativeElement.children[index].classList.remove('active');
+        this._list.forEach((item, index) => {
+            this._eref.nativeElement.children[index].classList.remove('active');
 
-           /**
-            *
-            */
-           if(item.active)
-               this._eref.nativeElement.children[index].classList.add('active');
-       })
+            /**
+             *
+             */
+            if (item.active)
+                this._eref.nativeElement.children[index].classList.add('active');
+        })
     }
 
     /**
@@ -307,7 +316,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @param object
      */
     DeReference(object: { active: boolean, [value: string]: any }) {
-        const { item } = object;
+        const {item} = object;
 
         /**
          *

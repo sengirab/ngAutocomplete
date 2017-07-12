@@ -6,7 +6,11 @@ https://github.com/sengirab/ngAutocomplete
 ![](https://raw.githubusercontent.com/sengirab/ngAutocomplete/master/demo.gif)
 
 # Changelog - (Read before updating.)
-## [1.1.3] - 2017-07-11.
+## [1.1.4] - 2017-07-12.
+- Maintain active option when input is blurred.
+- Updated README.md.
+
+## [1.1.3] - 2017-07-12.
 - Updated README.md.
 
 ## [1.1.2] - 2017-07-11.
