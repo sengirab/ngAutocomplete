@@ -1,11 +1,13 @@
 # NgAutoComplete / Example
 Light-weight autocomplete component for Angular2.
 
-https://github.com/sengirab/ng-autocomplete
+https://github.com/sengirab/ngAutocomplete
 
-![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo.gif)
+![](https://raw.githubusercontent.com/sengirab/ngAutocomplete/master/demo.gif)
 
 # Changelog - (Read before updating.)
+## [1.1.3] - 2017-07-11.
+- Updated README.md.
 
 ## [1.1.2] - 2017-07-11.
 - Fixed an issue; when selecting a option from a completer that is parent, active child option didn't reset.
@@ -21,6 +23,7 @@ https://github.com/sengirab/ng-autocomplete
       this.completer.SelectItem('completer', '1');
     ```
     ### Or if multiple completers in component.
+    
     ```typescript
       @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
 
@@ -53,7 +56,7 @@ https://github.com/sengirab/ng-autocomplete
 First thing to note, i've created this package to be as simple as possible. That's why i don't include any styling,
 this is so you could style it the way you want it.
 
-If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ng-autocomplete/blob/master/src/styles.css) 
+If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ngAutocomplete/blob/master/src/styles.css) 
 
 # Responses !Important
 #### Response when selected
@@ -166,7 +169,7 @@ Selected(item: SelectedAutocompleteItem) {
 # Turn off completion
 In some cases you may want to disable auto completion. e.g you want a html select element.
 ### Example
-![](https://raw.githubusercontent.com/sengirab/ng-autocomplete/master/demo2.gif)
+![](https://raw.githubusercontent.com/sengirab/ngAutocomplete/master/demo2.gif)
 ### Usage
 ```typescript    
 public group = [
