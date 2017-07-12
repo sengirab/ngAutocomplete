@@ -39,6 +39,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             this.ref.addEventListener('click', () => {
                 if (!this._open) {
                     this._open = true;
+
                     /**
                      *
                      */

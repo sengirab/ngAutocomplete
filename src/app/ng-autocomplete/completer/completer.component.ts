@@ -68,8 +68,14 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     RegisterClick() {
-        if(!this.group.completion)
+        if(!this.group.completion) {
             this.dropdown._open = true;
+
+            /**
+             *
+             */
+            this.dropdown.PrepareList();
+        }
     }
 
     /**
