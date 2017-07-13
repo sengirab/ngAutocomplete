@@ -1,5 +1,17 @@
-<ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
+<div>
+    <ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
                      [group]="group1" [key]="'group1'"></ng-autocomplete>
+    <div style="clear: both;"></div>
+</div>
 
-<ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
-                 [group]="group2" [key]="'group2'"></ng-autocomplete>
+<div>
+    <ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
+                     [group]="group2" [key]="'group2'"></ng-autocomplete>
+    <div style="clear: both;"></div>
+</div>
+
+<div>
+    <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
+                     [group]="group3" [key]="'group3'"></ng-autocomplete>
+    <div style="clear: both;"></div>
+</div>
