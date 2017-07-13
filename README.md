@@ -5,63 +5,6 @@ https://github.com/sengirab/ngAutocomplete
 
 ![](https://raw.githubusercontent.com/sengirab/ngAutocomplete/master/demo.gif)
 
-# Changelog - (Read before updating.)
-## [1.1.6] - 2017-07-12.
-- KeyEvents now preventDefault
-- Close dropdown on tab.
-- Open dropdown on focus - was only on click.
-- Updated README.md.
-
-## [1.1.5] - 2017-07-12.
-- Maintain active option when input is blurred - also for disabled completion inputs now.
-- Updated README.md.
-
-## [1.1.4] - 2017-07-12.
-- Maintain active option when input is blurred.
-- Updated README.md.
-
-## [1.1.3] - 2017-07-12.
-- Updated README.md.
-
-## [1.1.2] - 2017-07-11.
-- Fixed an issue; when selecting a option from a completer that is parent, active child option didn't reset.
-- Updated README.md.
-
-## [1.1.1] - 2017-07-11.
-### New Functionality.
-- SelectItem(key: string, id: string)
-    - NgAutocompleteComponent function - Set value manual, by id. This can be useful when the list is loaded
-    but there's a value set in the database. When the data is fetched from server, this method can be used.
-    ```typescript
-      @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
-      this.completer.SelectItem('completer', '1');
-    ```
-    ### Or if multiple completers in component.
-    
-    ```typescript
-      @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
-
-      const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
-      completer.SelectItem('completer', '1');
-    ```
-    
-## [1.0.1] - 2017-07-11.
-- Only groups with parents did a reset when the input reached a length <= 0. Now all inputs do, input with parents still get set to initial value.
-
-## [1.0.0] - 2017-07-11. Releasing since it's being used.
-### Renamed Functions.
-
-- ResetCompleters to ResetInputs.
-- ResetCompleter to ResetInput.
-- FindCompleter to FindInput.
-- TriggerChangeCompleters to TriggerChange.
-
-### New Functionality.
-- <ng-autocomplete [key]="'group1'"></ng-autocomplete> - Added key on component.
-- static FindCompleter usage (NgAutocompleteComponent.FindCompleter()) (not to be confused with the old FindCompleter, now FindInput)
-    - (key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent. This can be useful when you have multiple ng-autocomplete components
-    in one component. Note that this  can only be used when the view has been init.
-
 # Installation
 
 `npm i ng-auto-complete --save`
@@ -311,6 +254,62 @@ export class AppComponent implements OnInit {
 }
 ```
 
+# Changelog - (Read before updating.)
+## [1.1.6] - 2017-07-12.
+- KeyEvents now preventDefault
+- Close dropdown on tab.
+- Open dropdown on focus - was only on click.
+- Updated README.md.
+
+## [1.1.5] - 2017-07-12.
+- Maintain active option when input is blurred - also for disabled completion inputs now.
+- Updated README.md.
+
+## [1.1.4] - 2017-07-12.
+- Maintain active option when input is blurred.
+- Updated README.md.
+
+## [1.1.3] - 2017-07-12.
+- Updated README.md.
+
+## [1.1.2] - 2017-07-11.
+- Fixed an issue; when selecting a option from a completer that is parent, active child option didn't reset.
+- Updated README.md.
+
+## [1.1.1] - 2017-07-11.
+### New Functionality.
+- SelectItem(key: string, id: string)
+    - NgAutocompleteComponent function - Set value manual, by id. This can be useful when the list is loaded
+    but there's a value set in the database. When the data is fetched from server, this method can be used.
+    ```typescript
+      @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+      this.completer.SelectItem('completer', '1');
+    ```
+    ### Or if multiple completers in component.
+    
+    ```typescript
+      @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+
+      const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
+      completer.SelectItem('completer', '1');
+    ```
+    
+## [1.0.1] - 2017-07-11.
+- Only groups with parents did a reset when the input reached a length <= 0. Now all inputs do, input with parents still get set to initial value.
+
+## [1.0.0] - 2017-07-11. Releasing since it's being used.
+### Renamed Functions.
+
+- ResetCompleters to ResetInputs.
+- ResetCompleter to ResetInput.
+- FindCompleter to FindInput.
+- TriggerChangeCompleters to TriggerChange.
+
+### New Functionality.
+- <ng-autocomplete [key]="'group1'"></ng-autocomplete> - Added key on component.
+- static FindCompleter usage (NgAutocompleteComponent.FindCompleter()) (not to be confused with the old FindCompleter, now FindInput)
+    - (key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent. This can be useful when you have multiple ng-autocomplete components
+    in one component. Note that this  can only be used when the view has been init.
 
 # NgAutocompleteComponent Functions
 
