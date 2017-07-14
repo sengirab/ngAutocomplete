@@ -1,5 +1,5 @@
 # NgAutoComplete / Example
-Light-weight autocomplete component for Angular2.
+Light-weight autocomplete component for Angular (2/4+).
 
 [![Code Climate](https://codeclimate.com/github/sengirab/ngAutocomplete/badges/gpa.svg)](https://codeclimate.com/github/sengirab/ngAutocomplete)
 [![Issue Count](https://codeclimate.com/github/sengirab/ngAutocomplete/badges/issue_count.svg)](https://codeclimate.com/github/sengirab/ngAutocomplete)
