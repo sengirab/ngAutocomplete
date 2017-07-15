@@ -2,8 +2,8 @@
 Light-weight autocomplete component for Angular (2/4+).
 
 [![Code Climate](https://codeclimate.com/github/sengirab/ngAutocomplete/badges/gpa.svg)](https://codeclimate.com/github/sengirab/ngAutocomplete)
-[![Issue Count](https://codeclimate.com/github/sengirab/ngAutocomplete/badges/issue_count.svg)](https://codeclimate.com/github/sengirab/ngAutocomplete)
-[![Test Coverage](https://codeclimate.com/github/sengirab/ngAutocomplete/badges/coverage.svg)](https://codeclimate.com/github/sengirab/ngAutocomplete/coverage)
+[![npm version](https://badge.fury.io/js/ng-auto-complete.svg)](https://badge.fury.io/js/ng-auto-complete)
+
 
 https://github.com/sengirab/ngAutocomplete
 
