@@ -5,9 +5,9 @@ import {AutocompleteItem} from "../classes/AutocompleteItem";
  * @returns {Array}
  * @constructor
  */
-export function ReturnStringArrayByID(array: { id: string, [value: string]: any }[]) {
+export function ReturnStringArrayByID(array: { id: string|number, [value: string]: any }[]) {
     return array.reduce((result, item) => {
-        result.push(item.id);
+        result.push(item.id.toString());
 
         return result
     }, [])
@@ -22,6 +22,6 @@ export function ReturnStringArrayByID(array: { id: string, [value: string]: any 
  */
 export function FilterRemovals(removals: string[], list: AutocompleteItem[]) {
     return list.filter((item) => {
-        return removals.indexOf(item.id) <= -1;
+        return removals.indexOf(item.id.toString()) <= -1;
     });
 }

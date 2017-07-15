@@ -175,7 +175,7 @@ export class NgAutocompleteComponent implements OnInit {
      * @param ids
      * @constructor
      */
-    RemovableValues(key: string, ids: { id: string, [value: string]: any }[]) {
+    RemovableValues(key: string, ids: { id: string|number, [value: string]: any }[]) {
         const completer = this.FindInput(key);
         completer.group.Removables(ReturnStringArrayByID(ids));
 

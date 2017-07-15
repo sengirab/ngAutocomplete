@@ -9,6 +9,7 @@ import {NgAutocompleteComponent} from "./ng-autocomplete/ng-autocomplete.compone
 })
 export class AppComponent implements AfterViewInit {
     @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+    _removables = [];
 
     public group1 = [
         CreateNewAutocompleteGroup(
@@ -107,6 +108,23 @@ export class AppComponent implements AfterViewInit {
         )
     ];
 
+    public group5 = [
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'remove',
+            [
+                {title: 'Option 4', id: '1'},
+                {title: 'Option 5', id: 2},
+                {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: 4},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: 6},
+            ],
+            {titleKey: 'title', childrenKey: null},
+            ''
+        )
+    ];
+
     /**
      *
      * @returns {Array}
@@ -139,6 +157,18 @@ export class AppComponent implements AfterViewInit {
      */
     Selected(item: SelectedAutocompleteItem) {
         console.log(item);
+    }
+
+    /**
+     *
+     * @param item
+     * @constructor
+     */
+    RemoveSelected(item: SelectedAutocompleteItem) {
+        this._removables.push(item.item);
+
+        const component = NgAutocompleteComponent.FindCompleter('group5', this.completers);
+        component.RemovableValues('remove', this._removables);
     }
 
     /**
