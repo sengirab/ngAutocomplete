@@ -11,7 +11,14 @@
 </div>
 
 <div>
+    <button (click)="SetValues()">SET</button>
     <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
                      [group]="group3" [key]="'group3'"></ng-autocomplete>
+    <div style="clear: both;"></div>
+</div>
+
+<div>
+    <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
+                     [group]="group4" [key]="'group4'"></ng-autocomplete>
     <div style="clear: both;"></div>
 </div>

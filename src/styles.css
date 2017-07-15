@@ -544,3 +544,7 @@ body {
     background-color: #0099cc;
     color: #fff !important;
 }
+
+.ng-autocomplete-dropdown .ng-dropdown .dropdown-item .dropdown-item-highlight {
+    font-weight: bold;
+}

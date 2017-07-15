@@ -4,6 +4,7 @@ import {NgAutocompleteComponent} from "./ng-autocomplete.component";
 import {CompleterComponent} from "./completer/completer.component";
 import {NgDropdownDirective} from "./dropdown/ng-dropdown.directive";
 import {FormsModule} from "@angular/forms";
+import {HighlightPipe} from "./pipes/highlight";
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import {FormsModule} from "@angular/forms";
         NgAutocompleteComponent,
         CompleterComponent,
         NgDropdownDirective,
+        HighlightPipe
     ]
 })
 export class NgAutoCompleteModule {

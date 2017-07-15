@@ -1,11 +1,11 @@
 export class AutocompleteItem {
 
     title: string;
-    id?: string;
+    id?: string|number;
     children: any[];
     original: any;
 
-    constructor(title: string, id: string, original: any) {
+    constructor(title: string, id: string|number, original: any) {
         this.title = title;
         this.id = id;
         this.original = original;
@@ -15,7 +15,7 @@ export class AutocompleteItem {
      * object must have an ID
      * @constructor
      */
-    static TransformToAutocompleteItem(object: { id?: string; [value: string]: any }, titleKey: string, childrenKey: string | null = null) {
+    static TransformToAutocompleteItem(object: { id?: string|number; [value: string]: any }, titleKey: string, childrenKey: string | null = null) {
         const item = new AutocompleteItem(object[titleKey], object.id, object);
 
         /**

@@ -259,6 +259,29 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.2.8] - 2017-07-15.
+### New Functionality.
+- It's now possible to instantiate CreateNewAutocompleteGroup with an empty array and set its value later. This can be useful
+when you're waiting for an async task to complete.
+     ```
+        const component = NgAutocompleteComponent.FindCompleter('completer', this.completers);
+        component.SetValues(
+            'late', // <-- NOTE: this is the key of the input. You can call this what you want.
+            [
+                {title: 'Option 4', id: '1'},
+                {title: 'Option 5', id: '2'},
+                {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: '4'},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: '6'},
+            ]
+        )
+     ```
+
+- Created new pipe to highlight search query. class `dropdown-item-highlight`
+### Changes
+- CreateNewAutocompleteGroup now accepts {id:string|number}, before only {id:string}
+- Some small changes.
 ## [1.1.6] - 2017-07-12.
 - KeyEvents now preventDefault
 - Close dropdown on tab.
@@ -327,13 +350,15 @@ export class AppComponent implements OnInit {
 @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
 ```
 
-| Left-aligned | Center-aligned |
+| Function | Description |
 | :---         |     :---:      |
 | FindCompleter((key: string, list: QueryList<NgAutocompleteComponent>)) (Static function) | Finds completer |
 | ResetInputs()   | Resets all rendered completer inputs |
 | FindInput(key: string)     | Find completer input by assigned key |
-| RemovableValues(key: string, list: {id: string, [value: string]: any}[]) | Remove options from rendered list (by id) |
-| SelectItem(key: string, id: string) | e.g set an initial value on the completers input |
+| RemovableValues(key: string, list: {id: string or number, [value: string]: any}[]) | Remove options from rendered list (by id) |
+| SelectItem(key: string, id: string or number) | e.g set an initial value on the completers input |
+| SetValues(key: string, {id: string or number, [value: string]: any}[]) | Sets values for the input. Useful in async situations.|
+
 
 # CompleterComponent Functions
 
@@ -343,7 +368,7 @@ export class AppComponent implements OnInit {
 public input = this.completer.FindInput('completer');
 ```
 
-| Left-aligned | Center-aligned |
+| Function | Description |
 | :---         |     :---:      |
 | ClearValue()   | Clears found completer's input. |
 

@@ -13,7 +13,7 @@ export class AppComponent implements AfterViewInit {
     public group1 = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'Completer with children',
+            'parent',
             [
                 {
                     title: 'Option 1', id: '1', children: [
@@ -41,7 +41,7 @@ export class AppComponent implements AfterViewInit {
         ),
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'Completer listening to parent with children',
+            'child',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
@@ -58,7 +58,7 @@ export class AppComponent implements AfterViewInit {
     public group2 = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'Normal completer',
+            'normal',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
@@ -72,7 +72,7 @@ export class AppComponent implements AfterViewInit {
         ),
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'Disabled completer, only selectable values.',
+            'disabled.',
             [
                 {title: 'Option 4', id: '1'},
                 {title: 'Option 5', id: '2'},
@@ -90,16 +90,31 @@ export class AppComponent implements AfterViewInit {
     public group3 = [
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
-            'Lots of items',
+            'late',
+            [],
+            {titleKey: 'title', childrenKey: null},
+            ''
+        )
+    ];
+
+    public group4 = [
+        CreateNewAutocompleteGroup(
+            'Search / choose in / from list',
+            'items',
             this.FillArray(),
             {titleKey: 'title', childrenKey: null},
             ''
         )
     ];
 
+    /**
+     *
+     * @returns {Array}
+     * @constructor
+     */
     FillArray() {
         let arr = [];
-        for (let i = 0; i < 2000; i++) {
+        for (let i = 0; i < 500; i++) {
             arr.push({title: `Option ${i}`, id: i});
         }
 
@@ -124,5 +139,25 @@ export class AppComponent implements AfterViewInit {
      */
     Selected(item: SelectedAutocompleteItem) {
         console.log(item);
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    SetValues() {
+        const component = NgAutocompleteComponent.FindCompleter('group3', this.completers);
+
+        component.SetValues(
+            'late',
+            [
+                {title: 'Option 4', id: '1'},
+                {title: 'Option 5', id: '2'},
+                {title: 'Option 6', id: '3'},
+                {title: 'Option 7', id: '4'},
+                {title: 'Option 8', id: '5'},
+                {title: 'Option 9', id: '6'},
+            ]
+        )
     }
 }

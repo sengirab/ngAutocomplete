@@ -19,6 +19,8 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     @Input() public list: any[] = [];
     @Input() public active: any = null;
     @Input() public ref: Element = null;
+    @Input() public key: string = '';
+    @Input() public completion: boolean = true;
 
     @Output() public hover: EventEmitter<any> = new EventEmitter<any>();
     @Output() public selected: EventEmitter<any> = new EventEmitter<any>();
@@ -26,15 +28,17 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     _open: boolean = false;
     _list: { active: boolean, [value: string]: any }[] = [];
-    _class: string = 'dr-item-';
+    _class: string = '';
 
-    constructor(private _eref: ElementRef) {
+    constructor(public _eref: ElementRef) {
     }
 
     /**
      *
      */
     ngOnInit() {
+        this._class = `dr-item-${this.key}-`;
+
         if (this.RefExists()) {
             this.ref.addEventListener('click', () => {
                 if (!this._open) {
@@ -47,8 +51,14 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                 }
             });
 
+            this.ref.addEventListener('keydown', (event: KeyboardEvent) => {
+                this.keyDown(event);
+            });
+        }
+
+        if(!this.completion) {
             document.addEventListener('keydown', (event: KeyboardEvent) => {
-                if (this._open) {
+                if(this._open) {
                     this.keyDown(event);
                 }
             });
@@ -92,29 +102,27 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
          */
         switch (event.code) {
             case 'ArrowDown':
-                this.SetActive(this.FindActive() + 1);
                 if (!this._open) {
                     this._open = true;
-
-                    /**
-                     *
-                     */
                     this.PrepareList();
                 }
 
+                /**
+                 *
+                 */
+                this.SetActive(this.FindActive() + 1);
                 event.preventDefault();
                 break;
             case 'ArrowUp':
-                this.SetActive(this.FindActive() - 1);
                 if (!this._open) {
                     this._open = true;
-
-                    /**
-                     *
-                     */
                     this.PrepareList();
                 }
 
+                /**
+                 *
+                 */
+                this.SetActive(this.FindActive() - 1);
                 event.preventDefault();
                 break;
             case 'Enter':
@@ -293,14 +301,18 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     DetermineActiveClass() {
         this._list.forEach((item, index) => {
-            this._eref.nativeElement.children[index].classList.remove('active');
+            if (typeof this._eref.nativeElement.children[index] === 'undefined') {
+                return;
+            }
 
             /**
              *
              */
+            this._eref.nativeElement.children[index].classList.remove('active');
             if (item.active)
                 this._eref.nativeElement.children[index].classList.add('active');
         })
+
     }
 
     /**
@@ -308,17 +320,18 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     PrepareChildrenList() {
+        const list = this._eref.nativeElement.children;
+
         setTimeout(() => {
-            const list = this._eref.nativeElement.children;
             for (let i = 0; i < list.length; i++) {
                 list[i].id = this._class + i;
             }
+        }, 0);
 
-            /**
-             *
-             */
-            this.DetermineActiveClass();
-        }, 0)
+        /**
+         *
+         */
+        this.DetermineActiveClass();
 
     };
 
@@ -342,6 +355,11 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.RefExists()) {
             this.ref.removeEventListener('focus');
+            this.ref.removeEventListener('keydown');
+
+        }
+
+        if(!this.completion) {
             document.removeEventListener('keydown');
         }
     }

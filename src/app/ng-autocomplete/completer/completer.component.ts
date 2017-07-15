@@ -20,13 +20,15 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
                        [disabled]="!group.completion" (click)="RegisterClick()" (focus)="OpenDropdown()">
             </div>
 
-            <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected"
+            <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected" [key]="group.key"
+                 [completion]="group.completion"
                  (hover)="OnHoverDropdownItem($event)"
                  (selected)="SelectItem($event)"
                  (closed)="OnInputBlurred()"
             >
-                <div class="dropdown-item" *ngFor="let item of _items; let i = index" (click)="SelectItem(item)">
-                    {{item.title}}
+                <div class="dropdown-item" *ngFor="let item of _items; let i = index" (click)="SelectItem(item)"
+                     [innerHTML]="item.title | highlight:_highlight"
+                >
                 </div>
             </div>
         </div>`,
@@ -53,6 +55,7 @@ export class CompleterComponent implements OnInit {
 
     _items: AutocompleteItem[] = [];
     _completer: string = '';
+    _highlight: string = '';
 
     _DOM = {
         placeholder: <string>'',
@@ -108,6 +111,7 @@ export class CompleterComponent implements OnInit {
      */
     SelectItem(item: AutocompleteItem) {
         this._completer = item.title;
+        this._highlight = '';
 
         /**
          *
@@ -124,6 +128,7 @@ export class CompleterComponent implements OnInit {
      */
     OnModelChange(value: string) {
         this._completer = value;
+        this._highlight = value;
 
         if (value.length === 0) {
             this._DOM.selected = null;
@@ -137,7 +142,7 @@ export class CompleterComponent implements OnInit {
          */
         this._items = this.group.value.filter((item) => {
             return item.title.toLowerCase().indexOf(value.toLowerCase()) > -1;
-        })
+        });
     }
 
     /**

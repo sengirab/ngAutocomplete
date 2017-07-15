@@ -25,7 +25,7 @@ export class AutocompleteGroup {
      * @param titleKey
      * @constructor
      */
-    SetValue(value: { id: string; [value: string]: any }[], titleKey: string) {
+    SetNewValue(value: { id: string|number; [value: string]: any }[], titleKey: string) {
         const values = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, titleKey));
         this.SetCopy(values);
 
@@ -72,14 +72,27 @@ export class AutocompleteGroup {
         this._copy = Object.assign([], values);
     }
 
+    /**
+     *
+     * @param value
+     * @constructor
+     */
+    SetValues(value: { id?: string|number; [value: string]: any }[]) {
+        this.value = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, this.keys.titleKey, this.keys.childrenKey));
+
+        /**
+         *
+         */
+        this.initialValue = Object.assign([], this.value);
+        this.SetCopy(Object.assign([], this.value));
+    }
 }
 
-export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
+export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string|number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
     const group = new AutocompleteGroup();
 
     group.key = key;
     group.keys = keys;
-    group.value = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, keys.titleKey, keys.childrenKey));
     group.placeholder = placeholder;
     group.parent = parent;
     group.completion = completion;
@@ -88,8 +101,7 @@ export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, 
      * Initial value needed, if we empty search box or want to clear it, it needs to be reset.
      * Setting copy, used if user wants to remove values (by id.). This _ list gets filtered.
      */
-    group.initialValue = Object.assign([], group.value);
-    group.SetCopy(Object.assign([], group.value));
+    group.SetValues(value);
 
     return group;
 }

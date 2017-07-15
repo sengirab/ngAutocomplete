@@ -83,7 +83,7 @@ export class NgAutocompleteComponent implements OnInit {
                  *
                  */
                 if (selected.item !== null && typeof selected.item.children !== 'undefined') {
-                    item.SetValue(selected.item.children, selected.group.keys.titleKey);
+                    item.SetNewValue(selected.item.children, selected.group.keys.titleKey);
                 }
             }
         });
@@ -137,10 +137,26 @@ export class NgAutocompleteComponent implements OnInit {
     /**
      *
      * @param key
+     * @param values
+     * @constructor
+     */
+    SetValues(key:string, values: { id?: string; [value: string]: any }[]) {
+        const completer = this.FindInput(key);
+        completer.group.SetValues(values);
+
+        /**
+         * Items may have changed, need to te re-set list in completer components.
+         */
+        this.TriggerChange()
+    }
+
+    /**
+     *
+     * @param key
      * @param id
      * @constructor
      */
-    SelectItem(key: string, id: string) {
+    SelectItem(key: string, id: string|number) {
         const completer = this.FindInput(key);
 
         /**
