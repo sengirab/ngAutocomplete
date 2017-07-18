@@ -140,7 +140,7 @@ export class NgAutocompleteComponent implements OnInit {
      * @param values
      * @constructor
      */
-    SetValues(key:string, values: { id?: string; [value: string]: any }[]) {
+    SetValues(key:string, values: { id?: string|number; [value: string]: any }[]) {
         const completer = this.FindInput(key);
         completer.group.SetValues(values);
 
