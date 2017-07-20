@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit {
                 {title: 'Option 9', id: '6'},
             ],
             {titleKey: 'title', childrenKey: null},
-            'Completer with children',
+            'parent',
         ),
     ];
 
@@ -165,7 +165,9 @@ export class AppComponent implements AfterViewInit {
      * @constructor
      */
     RemoveSelected(item: SelectedAutocompleteItem) {
-        this._removables.push(item.item);
+        if(item.item !== null) {
+            this._removables.push(item.item);
+        }
 
         const component = NgAutocompleteComponent.FindCompleter('group5', this.completers);
         component.RemovableValues('remove', this._removables);

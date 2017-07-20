@@ -18,7 +18,10 @@ import {
 export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     @Input() public list: any[] = [];
     @Input() public active: any = null;
-    @Input() public ref: Element = null;
+
+    @Input() public input: Element = null;
+    @Input() public element: Element = null;
+
     @Input() public key: string = '';
     @Input() public completion: boolean = true;
 
@@ -40,18 +43,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this._class = `dr-item-${this.key}-`;
 
         if (this.RefExists()) {
-            this.ref.addEventListener('click', () => {
-                if (!this._open) {
-                    this._open = true;
-
-                    /**
-                     *
-                     */
-                    this.PrepareList();
-                }
-            });
-
-            this.ref.addEventListener('keydown', (event: KeyboardEvent) => {
+            this.input.addEventListener('keydown', (event: KeyboardEvent) => {
                 this.keyDown(event);
             });
         }
@@ -183,7 +175,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     @HostListener('document:click', ['$event'])
-    Close(event: Event, force: boolean = false) {
+    Close(event, force: boolean = false) {
         const close = () => {
             this._open = false;
             this.ClearActive();
@@ -200,7 +192,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             return;
         }
 
-        if ((this._open && (!this._eref.nativeElement.contains(event.target) && event.target !== this.ref))) {
+        if ((this._open && (!this.element.contains(event.target)))) {
             close();
         }
     }
@@ -215,7 +207,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     RefExists() {
-        return typeof this.ref !== 'undefined';
+        return typeof this.input !== 'undefined';
     }
 
     /**
@@ -354,9 +346,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     ngOnDestroy() {
         if (this.RefExists()) {
-            this.ref.removeEventListener('focus');
-            this.ref.removeEventListener('keydown');
-
+            this.input.removeEventListener('keydown');
         }
 
         if(!this.completion) {

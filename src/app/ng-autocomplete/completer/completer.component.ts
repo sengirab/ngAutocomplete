@@ -7,7 +7,7 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
 @Component({
     selector: 'ng-completer',
     template: `
-        <div class="ng-autocomplete-dropdown">
+        <div #element class="ng-autocomplete-dropdown">
 
             <!--GROUP: {{group.key}}-->
 
@@ -17,10 +17,12 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
                        (ngModelChange)="OnModelChange($event)"
                        autocomplete="off" [ngClass]="{'completion-off': !group.completion}"
-                       [disabled]="!group.completion" (click)="RegisterClick()" (focus)="OpenDropdown()">
+                       [disabled]="!group.completion" (focus)="OpenDropdown()" class="ng-autocomplete-input">
+                
+                <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon" (click)="DropdownArray()"></span>
             </div>
 
-            <div class="ng-dropdown" ngDropdown [list]="_items" [ref]="input" [active]="_DOM.selected" [key]="group.key"
+            <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input" [active]="_DOM.selected" [key]="group.key"
                  [completion]="group.completion"
                  (hover)="OnHoverDropdownItem($event)"
                  (selected)="SelectItem($event)"
@@ -33,6 +35,14 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
             </div>
         </div>`,
     styles: [`
+        .ng-autocomplete-inputs {
+            position: relative;
+        }
+        
+        .ng-autocomplete-dropdown-icon {
+            
+        }
+        
         .ng-autocomplete-dropdown .ng-dropdown {
             display: none;
         }
@@ -78,8 +88,42 @@ export class CompleterComponent implements OnInit {
      */
     RegisterClick() {
         if (!this.group.completion) {
-            this.OpenDropdown()
+            this.SwitchDropdownState()
         }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    DropdownArray() {
+        if (this.group.completion) {
+            this.SwitchDropdownState()
+        }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    SwitchDropdownState() {
+        if (this.dropdown._open) {
+            this.CloseDropdown();
+            return;
+        }
+
+        /**
+         *
+         */
+        this.OpenDropdown()
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    CloseDropdown() {
+        this.dropdown._open = false;
     }
 
     /**

@@ -17,7 +17,16 @@ https://github.com/sengirab/ngAutocomplete
 First thing to note, i've created this package to be as simple as possible. That's why i don't include any styling,
 this is so you could style it the way you want it.
 
-If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ngAutocomplete/blob/master/src/styles.css) 
+If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ngAutocomplete/blob/master/src/styles.css)
+### Classes
+- .ng-autocomplete-dropdown
+- .ng-autocomplete-inputs
+- .ng-autocomplete-input
+- .ng-autocomplete-placeholder
+- .ng-autocomplete-dropdown-icon (.open)
+- .ng-dropdown (.open)
+- .dropdown-item
+
 
 # Responses !Important
 #### Response when selected
@@ -259,6 +268,12 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.3.9] - 2017-07-20.
+### Styling
+- There's a new element `span.ng-autocomplete-dropdown-icon` this replaces the dropdown icon i did with css only.
+### Other changes
+- Increase of internal performance.
+- Had some issues with Element refs. #fixed.
 ## [1.2.8] - 2017-07-15.
 ### New Functionality.
 - It's now possible to instantiate CreateNewAutocompleteGroup with an empty array and set its value later. This can be useful
