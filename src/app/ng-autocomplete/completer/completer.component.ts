@@ -11,13 +11,14 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
 
             <!--GROUP: {{group.key}}-->
 
-            <div class="ng-autocomplete-inputs" (click)="RegisterClick()">
+            <div class="ng-autocomplete-inputs" (click)="RegisterClick()" [ngClass]="{'completion-off': !group.completion}">
                 <span class="ng-autocomplete-placeholder"
                       *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
                        (ngModelChange)="OnModelChange($event)"
-                       autocomplete="off" [ngClass]="{'completion-off': !group.completion}"
-                       [disabled]="!group.completion" (focus)="OpenDropdown()" class="ng-autocomplete-input">
+                       [value]="_completer"
+                       autocomplete="off"
+                       (focus)="OpenDropdown()" class="ng-autocomplete-input">
                 
                 <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon" (click)="DropdownArray()"></span>
             </div>
@@ -38,6 +39,14 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         .ng-autocomplete-inputs {
             position: relative;
         }
+
+        .ng-autocomplete-inputs.completion-off {
+            cursor: pointer;
+        }
+        
+        .ng-autocomplete-inputs.completion-off input {
+            pointer-events: none;
+        }
         
         .ng-autocomplete-dropdown-icon {
             
@@ -45,10 +54,6 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         
         .ng-autocomplete-dropdown .ng-dropdown {
             display: none;
-        }
-
-        .ng-autocomplete-dropdown .ng-autocomplete-inputs input.completion-off {
-            cursor: pointer;
         }
 
         .ng-autocomplete-dropdown .ng-dropdown.open {

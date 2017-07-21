@@ -268,6 +268,17 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.3.11] - 2017-07-21.
+### Styling
+- Some internal styling has changed.
+    - When completer is turned of, input used to be disabled. This doesn't work on all browsers. Input now get
+    `pointer-events: none;`
+- Browser compatibility.
+### Fixes
+- Value has to be set on input (equal to ngModel).
+    - This created an issue on safari, when an item was selected, the placeholder didn't go away.
+    
+
 ## [1.3.9] - 2017-07-20.
 ### Styling
 - There's a new element `span.ng-autocomplete-dropdown-icon` this replaces the dropdown icon i did with css only.
