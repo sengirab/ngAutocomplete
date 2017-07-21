@@ -11,6 +11,7 @@ import {
     Output,
     SimpleChanges
 } from "@angular/core";
+import {IsMobileOrTablet} from "../utils/utils";
 
 @Directive({
     selector: '[ngDropdown]'
@@ -54,6 +55,13 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                     this.keyDown(event);
                 }
             });
+        }
+
+        if(!IsMobileOrTablet()) {
+            this._eref.nativeElement.addEventListener('mouseover', (event: KeyboardEvent) => {
+                this.OnMouseOver(event);
+            });
+
         }
 
         /**
@@ -136,6 +144,21 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    /**
+     *
+     * @param event
+     */
+    OnMouseOver(event: KeyboardEvent) {
+        const el: any = event.target || event.srcElement;
+
+        /**
+         *
+         */
+        if (el.id.length > 0 && el.id.includes(this._class)) {
+            this.SetActive(Number(el.id.slice(this._class.length, el.id.length)));
+        }
+    }
+
     // =======================================================================//
     // ! Bindings                                                             //
     // =======================================================================//
@@ -153,22 +176,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     // =======================================================================//
     // ! Listeners                                                            //
     // =======================================================================//
-
-    /**
-     *
-     * @param event
-     */
-    @HostListener('mouseover', ['$event'])
-    onMouseOver(event: KeyboardEvent) {
-        const el: any = event.target || event.srcElement;
-
-        /**
-         *
-         */
-        if (el.id.length > 0 && el.id.includes(this._class)) {
-            this.SetActive(Number(el.id.slice(this._class.length, el.id.length)));
-        }
-    }
 
     /**
      *
@@ -351,6 +358,10 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
         if(!this.completion) {
             document.removeEventListener('keydown');
+        }
+
+        if(!IsMobileOrTablet()) {
+            this._eref.nativeElement.removeEventListener('mouseover');
         }
     }
 }

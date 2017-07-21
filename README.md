@@ -268,6 +268,8 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.3.12] - 2017-07-21.
+- Mobile update: Remove mouseover when mobile. This prevents the user from needing to double tap the options.
 ## [1.3.11] - 2017-07-21.
 ### Styling
 - Some internal styling has changed.
