@@ -58,7 +58,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         }
 
         if(!IsMobileOrTablet()) {
-            this._eref.nativeElement.addEventListener('mouseover', (event: KeyboardEvent) => {
+            this._eref.nativeElement.addEventListener('mouseover', (event: MouseEvent) => {
                 this.OnMouseOver(event);
             });
 
@@ -102,31 +102,29 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
          */
         switch (event.code) {
             case 'ArrowDown':
-                if (!this._open) {
-                    this._open = true;
-                    this.PrepareList();
-                }
+                this.Open();
 
                 /**
                  *
                  */
                 this.SetActive(this.FindActive() + 1);
+                this.DropdownFocusAreaDown();
+
                 event.preventDefault();
                 break;
             case 'ArrowUp':
-                if (!this._open) {
-                    this._open = true;
-                    this.PrepareList();
-                }
+                this.Open();
 
                 /**
                  *
                  */
                 this.SetActive(this.FindActive() - 1);
+                this.DropdownFocusAreaUp();
+
                 event.preventDefault();
                 break;
             case 'Enter':
-                this.selected.emit(this.DeReference(this._list[this.FindActive()]));
+                this.EmitSelected();
                 this.Close(null, true);
 
                 event.preventDefault();
@@ -137,6 +135,10 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                 event.preventDefault();
                 break;
             case 'Tab':
+                if(!event.shiftKey) {
+                    this.EmitSelected();
+                }
+
                 this.Close(null, true);
                 break;
             default:
@@ -148,14 +150,58 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      * @param event
      */
-    OnMouseOver(event: KeyboardEvent) {
-        const el: any = event.target || event.srcElement;
+    OnMouseOver(event: MouseEvent) {
+        // Mouse didn't actually move, so no logic needed.
+        if(event.movementX == 0 && event.movementY == 0) {
+            return
+        }
 
         /**
          *
          */
+        const el: any = event.target || event.srcElement;
         if (el.id.length > 0 && el.id.includes(this._class)) {
             this.SetActive(Number(el.id.slice(this._class.length, el.id.length)));
+        }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    EmitSelected() {
+        if(this.FindActive() > -1) {
+            this.selected.emit(this.DeReference(this._list[this.FindActive()]));
+        }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    DropdownFocusAreaDown() {
+        let scroll = this._eref.nativeElement.offsetHeight + this._eref.nativeElement.scrollTop;
+
+        /**
+         *
+         */
+        if((this.GetElement(this.FindActive()).offsetTop + this.GetElement(this.FindActive()).offsetHeight) > scroll) {
+            this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop - (this._eref.nativeElement.offsetHeight - this.GetElement(this.FindActive()).offsetHeight)
+        }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    DropdownFocusAreaUp() {
+        let scroll = this._eref.nativeElement.scrollTop;
+
+        /**
+         *
+         */
+        if(this.GetElement(this.FindActive()).offsetTop < scroll && scroll > 0) {
+            this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop;
         }
     }
 
@@ -185,11 +231,11 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     Close(event, force: boolean = false) {
         const close = () => {
             this._open = false;
-            this.ClearActive();
 
             /**
              * Emit NULL so listening components know what to do.
              */
+            this.ClearActive();
             this.hover.emit(null);
             this.closed.emit();
         };
@@ -207,6 +253,26 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     // =======================================================================//
     // ! Utils                                                                //
     // =======================================================================//
+
+    /**
+     *
+     * @constructor
+     */
+    Open() {
+        if (!this._open) {
+            this._open = true;
+            this.PrepareList();
+
+            /**
+             *
+             */
+            if (this.FindActive() === -1) {
+                setTimeout(() => {
+                    this._eref.nativeElement.scrollTop = 0;
+                }, 0);
+            }
+        }
+    }
 
     /**
      *
@@ -246,7 +312,19 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
         this._list[index].active = true;
         this.hover.emit(this.DeReference(this._list[index]));
-        this._eref.nativeElement.children[index].classList.add('active');
+        /**
+         *
+         */
+        this.GetElement(index).classList.add('active');
+    }
+
+    /**
+     *
+     * @param index
+     * @constructor
+     */
+    GetElement(index: number) {
+        return this._eref.nativeElement.children[index];
     }
 
     /**
@@ -261,7 +339,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
              *
              * @type {string}
              */
-            this._eref.nativeElement.children[index].classList.remove('active');
+            this.GetElement(index).classList.remove('active');
         });
     }
 
@@ -300,16 +378,16 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     DetermineActiveClass() {
         this._list.forEach((item, index) => {
-            if (typeof this._eref.nativeElement.children[index] === 'undefined') {
+            if (typeof this.GetElement(index) === 'undefined') {
                 return;
             }
 
             /**
              *
              */
-            this._eref.nativeElement.children[index].classList.remove('active');
+            this.GetElement(index).classList.remove('active');
             if (item.active)
-                this._eref.nativeElement.children[index].classList.add('active');
+                this.GetElement(index).classList.add('active');
         })
 
     }

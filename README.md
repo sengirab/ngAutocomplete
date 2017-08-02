@@ -268,6 +268,11 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.4.12] - 2017-08-02.
+- Added tab to submit events. (not preventing default, so still goes to the next input, if there's one).
+- Added better support for navigating with arrows. Dropdown list now navigates to the selected item if the items exceed 
+the dropdown its given height.
+- Internal code cleanup.
 ## [1.3.12] - 2017-07-21.
 - Mobile update: Remove mouseover when mobile. This prevents the user from needing to double tap the options.
 ## [1.3.11] - 2017-07-21.

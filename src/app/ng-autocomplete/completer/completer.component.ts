@@ -136,14 +136,7 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     OpenDropdown() {
-        if (!this.dropdown._open) {
-            this.dropdown._open = true;
-
-            /**
-             *
-             */
-            this.dropdown.PrepareList();
-        }
+        this.dropdown.Open();
     }
 
     /**
