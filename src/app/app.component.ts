@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, QueryList, ViewChildren} from "@angular/core";
+import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {CreateNewAutocompleteGroup} from "./ng-autocomplete/classes/AutocompleteGroup";
 import {SelectedAutocompleteItem} from "./ng-autocomplete/classes/typing";
 import {NgAutocompleteComponent} from "./ng-autocomplete/ng-autocomplete.component";
@@ -8,7 +8,9 @@ import {NgAutocompleteComponent} from "./ng-autocomplete/ng-autocomplete.compone
     templateUrl: './app.component.html',
 })
 export class AppComponent implements AfterViewInit {
-    @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+    // @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+
     _removables = [];
 
     public group1 = [
@@ -152,7 +154,7 @@ export class AppComponent implements AfterViewInit {
 
     /**
      *
-     * @param item
+     * @param itemt
      * @constructor
      */
     Selected(item: SelectedAutocompleteItem) {
@@ -164,23 +166,23 @@ export class AppComponent implements AfterViewInit {
      * @param item
      * @constructor
      */
-    RemoveSelected(item: SelectedAutocompleteItem) {
-        if(item.item !== null) {
-            this._removables.push(item.item);
-        }
-
-        const component = NgAutocompleteComponent.FindCompleter('group5', this.completers);
-        component.RemovableValues('remove', this._removables);
-    }
+    // RemoveSelected(item: SelectedAutocompleteItem) {
+    //     if(item.item !== null) {
+    //         this._removables.push(item.item);
+    //     }
+    //
+    //     const component = NgAutocompleteComponent.FindCompleter('group5', this.completers);
+    //     component.RemovableValues('remove', this._removables);
+    // }
 
     /**
      *
      * @constructor
      */
     SetValues() {
-        const component = NgAutocompleteComponent.FindCompleter('group3', this.completers);
+        // const component = NgAutocompleteComponent.FindCompleter('group3', this.completers);
 
-        component.SetValues(
+        this.completer.SetValues(
             'late',
             [
                 {title: 'Option 4', id: '1'},

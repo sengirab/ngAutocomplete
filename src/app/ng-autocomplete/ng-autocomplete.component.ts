@@ -1,24 +1,35 @@
-import {Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren} from "@angular/core";
-import {AutocompleteGroup} from "./classes/AutocompleteGroup";
-import {SelectedAutocompleteItem} from "./classes/typing";
-import {CompleterComponent} from "./completer/completer.component";
-import {ReturnStringArrayByID} from "./utils/utils";
+import {
+    AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
+import { AutocompleteGroup } from './classes/AutocompleteGroup';
+import { SelectedAutocompleteItem } from './classes/typing';
+import { CompleterComponent } from './completer/completer.component';
+import { ReturnStringArrayByID } from './utils/utils';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'ng-autocomplete',
     template: `
+        <div #init style="display: none;"><span class="after-view-init"></span></div>
         <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)"
                       (selected)="ListenToSelected($event)"
                       [group]="item"></ng-completer>
     `
 })
-export class NgAutocompleteComponent implements OnInit {
+export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterContentInit, AfterViewChecked {
     @ViewChildren(CompleterComponent) public completers: QueryList<CompleterComponent>;
+    @ViewChild('init') public init: ElementRef;
+
     @Output() public selected: EventEmitter<SelectedAutocompleteItem> = new EventEmitter<SelectedAutocompleteItem>();
 
     @Input() public group: AutocompleteGroup[] = [];
     @Input() public key: string = '';
     @Input() public classes: string[] = [];
+
+    _viewHasBeenInit: boolean = false;
 
     constructor() {
     }
@@ -27,6 +38,30 @@ export class NgAutocompleteComponent implements OnInit {
      *
      */
     ngOnInit() {
+    }
+
+    /**
+     *
+     */
+    ngAfterViewInit() {
+    }
+
+    /**
+     *
+     */
+    ngAfterContentInit() {
+
+    }
+
+    /**
+     *
+     */
+    ngAfterViewChecked() {
+        let el = this.init.nativeElement.querySelector('.after-view-init');
+
+        if(window.getComputedStyle(el).length > 0) {
+            this._viewHasBeenInit = true;
+        }
     }
 
     /**
@@ -49,7 +84,7 @@ export class NgAutocompleteComponent implements OnInit {
      */
     InputCleared(key: string) {
         this.group.forEach((group) => {
-            if(group.key === key) {
+            if (group.key === key) {
                 this.ResetInput(group.key);
             }
 
@@ -110,18 +145,69 @@ export class NgAutocompleteComponent implements OnInit {
 
     /**
      *
-     * @param key
+     * @param {string} key
      * @returns {CompleterComponent}
      * @constructor
      */
-    FindInput(key: string): CompleterComponent {
+    GetInput(key: string): CompleterComponent {
         return this.completers.reduce((result, completer) => {
             if (completer.group.key === key) {
                 result = completer;
             }
 
             return result
-        }, <CompleterComponent>{})
+        }, <CompleterComponent>{});
+    }
+
+    /**
+     *
+     * @param {string} key
+     * @param {(completer: CompleterComponent) => void} f
+     * @constructor
+     */
+    SubscribeInput(key: string, f: (completer: CompleterComponent) => void) {
+        if (this._viewHasBeenInit) {
+            let completer = this.GetInput(key);
+
+            /**
+             *
+             */
+            f(completer);
+            return;
+        }
+
+        let s = this.FindInput(key).subscribe((completer) => {
+            f(completer);
+
+            /**
+             *
+             */
+            s.unsubscribe();
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @returns {CompleterComponent}
+     * @constructor
+     */
+    FindInput(key: string) {
+        let s: Subject<CompleterComponent> = new Subject<CompleterComponent>();
+
+        let i = setInterval(() => {
+            if (this._viewHasBeenInit) {
+                s.next(this.GetInput(key));
+                s.complete();
+
+                /**
+                 *
+                 */
+                clearInterval(i);
+            }
+        }, 1000);
+
+        return s;
     }
 
     /**
@@ -130,8 +216,12 @@ export class NgAutocompleteComponent implements OnInit {
      * @constructor
      */
     ResetInput(key: string) {
-        const completer = this.FindInput(key);
-        completer.ClearValue();
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer.ClearValue();
+            }
+        );
     }
 
     /**
@@ -140,14 +230,18 @@ export class NgAutocompleteComponent implements OnInit {
      * @param values
      * @constructor
      */
-    SetValues(key:string, values: { id?: string|number; [value: string]: any }[]) {
-        const completer = this.FindInput(key);
-        completer.group.SetValues(values);
+    SetValues(key: string, values: { id?: string | number; [value: string]: any }[]) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer.group.SetValues(values);
 
-        /**
-         * Items may have changed, need to te re-set list in completer components.
-         */
-        this.TriggerChange()
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
+            }
+        );
     }
 
     /**
@@ -156,17 +250,18 @@ export class NgAutocompleteComponent implements OnInit {
      * @param id
      * @constructor
      */
-    SelectItem(key: string, id: string|number) {
-        const completer = this.FindInput(key);
+    SelectItem(key: string, id: string | number) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer._items.forEach((item) => {
+                    if (item.id == id) {
+                        completer.SelectItem(item);
+                    }
+                });
 
-        /**
-         *
-         */
-        completer._items.forEach((item) => {
-            if(item.id === id) {
-                completer.SelectItem(item);
             }
-        })
+        );
     }
 
     /**
@@ -175,14 +270,18 @@ export class NgAutocompleteComponent implements OnInit {
      * @param ids
      * @constructor
      */
-    RemovableValues(key: string, ids: { id: string|number, [value: string]: any }[]) {
-        const completer = this.FindInput(key);
-        completer.group.Removables(ReturnStringArrayByID(ids));
+    RemovableValues(key: string, ids: { id: string | number, [value: string]: any }[]) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer.group.Removables(ReturnStringArrayByID(ids));
 
-        /**
-         * Items may have changed, need to te re-set list in completer components.
-         */
-        this.TriggerChange()
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
+            }
+        );
     }
 
     /**
@@ -208,7 +307,7 @@ export class NgAutocompleteComponent implements OnInit {
             return key === completer.key;
         });
 
-        if(typeof completer[0] !== 'undefined') {
+        if (typeof completer[0] !== 'undefined') {
             return completer[0]
         }
 

@@ -5,10 +5,14 @@ import {HttpModule} from "@angular/http";
 
 import {AppComponent} from "./app.component";
 import {NgAutoCompleteModule} from "./ng-autocomplete/ng-autocomplete.module";
+import { NgViewComponent } from './ng-view/ng-view.component';
+import { NgHolderComponent } from './ng-holder/ng-holder.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        NgViewComponent,
+        NgHolderComponent
     ],
     imports: [
         BrowserModule,

@@ -40,3 +40,7 @@ export function IsMobileOrTablet() {
 
     return isMobile
 }
+
+export function ReturnInterval() {
+
+}

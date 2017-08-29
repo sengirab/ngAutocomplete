@@ -268,6 +268,13 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [1.5.12], [1.6.12], [1.7.12] - 2017-08-29.
+- A lot of internal changes & bugfixes.
+- In some cases when the a view has a hidden ng-content, that shows if an expression evaluates to true and 
+  a completer function has been used e.g(`SelectItem('completer', 5)`) it would give an error; completer view is not
+  initialized. 
+  - Functions that are called before the completer view has been initialized are now queued to be fired when the view
+    is actually initialized.
 ## [1.4.12] - 2017-08-02.
 - Added tab to submit events. (not preventing default, so still goes to the next input, if there's one).
 - Added better support for navigating with arrows. Dropdown list now navigates to the selected item if the items exceed 

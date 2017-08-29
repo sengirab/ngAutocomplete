@@ -1,31 +1,37 @@
-<div>
-    <ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
-                     [group]="group1" [key]="'group1'"></ng-autocomplete>
-    <div style="clear: both;"></div>
-</div>
+<!--<div>-->
+    <!--<ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"-->
+                     <!--[group]="group1" [key]="'group1'"></ng-autocomplete>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
+
+<!--<div>-->
+    <!--<ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"-->
+                     <!--[group]="group2" [key]="'group2'"></ng-autocomplete>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
+
+<!--<div>-->
+    <!--<button (click)="SetValues()">SET</button>-->
+    <!--<ng-autocomplete (selected)="Selected($event)" [classes]="['']"-->
+                     <!--[group]="group3" [key]="'group3'"></ng-autocomplete>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
+
+<!--<div>-->
+    <!--<ng-autocomplete (selected)="Selected($event)" [classes]="['']"-->
+                     <!--[group]="group4" [key]="'group4'"></ng-autocomplete>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
+
+<!--<div>-->
+    <!--<h1>REMOVE</h1>-->
+    <!--<ng-autocomplete (selected)="RemoveSelected($event)" [classes]="['']"-->
+                     <!--[group]="group5" [key]="'group5'"></ng-autocomplete>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
 
 <div>
-    <ng-autocomplete (selected)="Selected($event)" [classes]="['fifty']"
-                     [group]="group2" [key]="'group2'"></ng-autocomplete>
-    <div style="clear: both;"></div>
-</div>
-
-<div>
-    <button (click)="SetValues()">SET</button>
-    <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
-                     [group]="group3" [key]="'group3'"></ng-autocomplete>
-    <div style="clear: both;"></div>
-</div>
-
-<div>
-    <ng-autocomplete (selected)="Selected($event)" [classes]="['']"
-                     [group]="group4" [key]="'group4'"></ng-autocomplete>
-    <div style="clear: both;"></div>
-</div>
-
-<div>
-    <h1>REMOVE</h1>
-    <ng-autocomplete (selected)="RemoveSelected($event)" [classes]="['']"
-                     [group]="group5" [key]="'group5'"></ng-autocomplete>
-    <div style="clear: both;"></div>
+    <app-ng-view>
+        <app-ng-holder></app-ng-holder>
+    </app-ng-view>
 </div>

@@ -18,6 +18,7 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
                        (ngModelChange)="OnModelChange($event)"
                        [value]="_completer"
                        autocomplete="off"
+                       (click)="OpenDropdown()"
                        (focus)="OpenDropdown()" class="ng-autocomplete-input">
                 
                 <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon" (click)="DropdownArray()"></span>
@@ -45,6 +46,10 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         }
         
         .ng-autocomplete-inputs.completion-off input {
+            pointer-events: none;
+        }
+
+        .ng-autocomplete-placeholder {
             pointer-events: none;
         }
         
@@ -129,6 +134,12 @@ export class CompleterComponent implements OnInit {
      */
     CloseDropdown() {
         this.dropdown._open = false;
+
+        /**
+         *
+         * @type {string}
+         */
+        this._DOM.placeholder = '';
     }
 
     /**
@@ -137,6 +148,12 @@ export class CompleterComponent implements OnInit {
      */
     OpenDropdown() {
         this.dropdown.Open();
+
+        /**
+         *
+         * @type {string}
+         */
+        this._DOM.placeholder = '';
     }
 
     /**
