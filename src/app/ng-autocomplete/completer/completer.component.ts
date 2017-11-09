@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { AutocompleteGroup } from '../classes/AutocompleteGroup';
-import { AutocompleteItem, StrippedAutocompleteGroup } from '../classes/AutocompleteItem';
+import {
+    AutocompleteItem, ComparableAutoCompleteString, SearchableAutoCompleteString,
+    StrippedAutocompleteGroup
+} from '../classes/AutocompleteItem';
 import { NgDropdownDirective } from '../dropdown/ng-dropdown.directive';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
@@ -195,7 +198,7 @@ export class CompleterComponent implements OnInit {
             this._DOM.selected = item;
         } else {
             i = item;
-            this._DOM.selected = AutocompleteItem.SearchableAutoCompleteString(item.title, item.id);
+            this._DOM.selected = SearchableAutoCompleteString(item.title, item.id);
         }
 
         this._completer = i.title;
@@ -227,7 +230,7 @@ export class CompleterComponent implements OnInit {
              */
             const obj = {};
             for (let key in this.group.value) {
-                if (AutocompleteItem.ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                if (ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
                     obj[key] = this.group.value[key]
                 }
             }

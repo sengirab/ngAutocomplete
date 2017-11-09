@@ -1,4 +1,4 @@
-import { AutocompleteItem } from './AutocompleteItem';
+import { AutocompleteItem, SearchableAutoCompleteItems } from './AutocompleteItem';
 
 export class AutocompleteGroup {
     initialValue: { [value: string]: AutocompleteItem };
@@ -25,7 +25,7 @@ export class AutocompleteGroup {
      * @constructor
      */
     SetNewValue(value: { id: string | number; [value: string]: any }[], titleKey: string) {
-        const values = AutocompleteItem.SearchableAutoCompleteItems(value, titleKey);
+        const values = SearchableAutoCompleteItems(value, titleKey);
         this.SetCopy(values);
 
         /**
@@ -77,7 +77,7 @@ export class AutocompleteGroup {
      * @constructor
      */
     SetValues(value: { id?: string | number; [value: string]: any }[]) {
-        this.value = AutocompleteItem.SearchableAutoCompleteItems(value, this.keys.titleKey, this.keys.childrenKey);
+        this.value = SearchableAutoCompleteItems(value, this.keys.titleKey, this.keys.childrenKey);
 
         /**
          *
