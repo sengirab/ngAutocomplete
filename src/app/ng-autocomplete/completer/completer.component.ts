@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {AutocompleteGroup} from "../classes/AutocompleteGroup";
-import {SelectedAutocompleteItem} from "../classes/typing";
-import {AutocompleteItem} from "../classes/AutocompleteItem";
-import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
+import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { AutocompleteGroup } from '../classes/AutocompleteGroup';
+import { AutocompleteItem, StrippedAutocompleteGroup } from '../classes/AutocompleteItem';
+import { NgDropdownDirective } from '../dropdown/ng-dropdown.directive';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/debounceTime';
+import { GroupNoResult } from '../utils/utils';
 
 @Component({
     selector: 'ng-completer',
@@ -11,27 +13,31 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
 
             <!--GROUP: {{group.key}}-->
 
-            <div class="ng-autocomplete-inputs" (click)="RegisterClick()" [ngClass]="{'completion-off': !group.completion}">
+            <div class="ng-autocomplete-inputs" (click)="RegisterClick()"
+                 [ngClass]="{'completion-off': !group.completion}">
                 <span class="ng-autocomplete-placeholder"
                       *ngIf="_DOM.placeholder.length > 0">{{_DOM.placeholder}}</span>
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
-                       (ngModelChange)="OnModelChange($event)"
+                       (ngModelChange)="_change.next($event);"
                        [value]="_completer"
                        autocomplete="off"
                        (click)="OpenDropdown()"
                        (focus)="OpenDropdown()" class="ng-autocomplete-input">
-                
-                <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon" (click)="DropdownArray()"></span>
+
+                <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
+                      (click)="DropdownArray()"></span>
             </div>
 
-            <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input" [active]="_DOM.selected" [key]="group.key"
+            <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
+                 [active]="_DOM.selected" [key]="group.key"
                  [completion]="group.completion"
                  (hover)="OnHoverDropdownItem($event)"
                  (selected)="SelectItem($event)"
                  (closed)="OnInputBlurred()"
             >
-                <div class="dropdown-item" *ngFor="let item of _items; let i = index" (click)="SelectItem(item)"
-                     [innerHTML]="item.title | highlight:_highlight"
+                <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
+                     (click)="SelectItem(_items[item])"
+                     [innerHTML]="_items[item].title | highlight:_highlight"
                 >
                 </div>
             </div>
@@ -44,7 +50,7 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         .ng-autocomplete-inputs.completion-off {
             cursor: pointer;
         }
-        
+
         .ng-autocomplete-inputs.completion-off input {
             pointer-events: none;
         }
@@ -52,11 +58,11 @@ import {NgDropdownDirective} from "../dropdown/ng-dropdown.directive";
         .ng-autocomplete-placeholder {
             pointer-events: none;
         }
-        
+
         .ng-autocomplete-dropdown-icon {
-            
+
         }
-        
+
         .ng-autocomplete-dropdown .ng-dropdown {
             display: none;
         }
@@ -70,25 +76,39 @@ export class CompleterComponent implements OnInit {
     @ViewChild(NgDropdownDirective) public dropdown: NgDropdownDirective;
 
     @Output() public cleared: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public selected: EventEmitter<SelectedAutocompleteItem> = new EventEmitter<SelectedAutocompleteItem>();
+    @Output() public selected: EventEmitter<StrippedAutocompleteGroup> = new EventEmitter<StrippedAutocompleteGroup>();
+    @Output('no-result') public noResult: EventEmitter<GroupNoResult> = new EventEmitter<GroupNoResult>();
+
     @Input() public group: AutocompleteGroup = <AutocompleteGroup>{};
 
-    _items: AutocompleteItem[] = [];
+    _change: Subject<string> = new Subject<string>();
+    _items: { [value: string]: AutocompleteItem } = {};
     _completer: string = '';
     _highlight: string = '';
 
     _DOM = {
         placeholder: <string>'',
-        selected: <AutocompleteItem>null
+        selected: <string>''
     };
 
-    constructor() {
+    constructor(private _zone: NgZone) {
     }
 
     /**
      *
      */
     ngOnInit() {
+        this._zone.runOutsideAngular(() => {
+
+            this._change
+                .debounceTime(300)
+                .subscribe((value: string) => {
+                    this._zone.run(() => {
+                        this.OnModelChange(value)
+                    });
+                });
+        });
+
         this.SetItems();
     }
 
@@ -161,23 +181,29 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     SetItems() {
-        this._items = this.group.value;
+        this._items = this.group.value
     }
 
     /**
      *
      * @constructor
      */
-    SelectItem(item: AutocompleteItem) {
-        this._completer = item.title;
+    SelectItem(item: AutocompleteItem | string) {
+        let i: AutocompleteItem;
+        if (typeof item === 'string') {
+            i = this._items[item];
+            this._DOM.selected = item;
+        } else {
+            i = item;
+            this._DOM.selected = AutocompleteItem.SearchableAutoCompleteString(item.title, item.id);
+        }
+
+        this._completer = i.title;
         this._highlight = '';
 
-        /**
-         *
-         */
+
         this.dropdown.Close(null, true);
-        this._DOM.selected = item;
-        this.selected.emit({group: this.group, item: item});
+        this.selected.emit({group: {key: this.group.key}, item: i});
     }
 
     /**
@@ -192,16 +218,23 @@ export class CompleterComponent implements OnInit {
         if (value.length === 0) {
             this._DOM.selected = null;
             this.cleared.emit(this.group.key);
-        }
+        } else if (value.length > 2) {
 
-        /**
-         *
-         * @type {AutocompleteItem[]}
-         * @private
-         */
-        this._items = this.group.value.filter((item) => {
-            return item.title.toLowerCase().indexOf(value.toLowerCase()) > -1;
-        });
+            /**
+             *
+             * @type {AutocompleteItem[]}
+             * @private
+             */
+            const obj = {};
+            for (let key in this.group.value) {
+                if (AutocompleteItem.ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                    obj[key] = this.group.value[key]
+                }
+            }
+
+            this._items = obj;
+            this.EmptySearch(this._items, value);
+        }
     }
 
     /**
@@ -222,7 +255,11 @@ export class CompleterComponent implements OnInit {
      *
      * @constructor
      */
-    OnHoverDropdownItem(item: AutocompleteItem) {
+    OnHoverDropdownItem(item: AutocompleteItem | string) {
+        if (typeof item == 'string') {
+            this._DOM.placeholder = this._items[item].title;
+            return;
+        }
         if (item == null) {
             this._DOM.placeholder = '';
             return;
@@ -240,13 +277,21 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     HasChosenValue(): boolean {
-        return this.group.value.reduce((result, item) => {
-            if (item.title === this._completer) {
-                result = true
-            }
+        return this._DOM.selected !== null
+    }
 
-            return result
-        }, false)
+    /**
+     *
+     * @param {Object} obj
+     * @param {string} query
+     * @constructor
+     */
+    EmptySearch(obj: Object, query: string) {
+        if(Object.keys(obj).length > 0) {
+            return
+        }
+
+        this.noResult.emit({group: {key: this.group.key}, query: query})
     }
 
     /**
@@ -260,6 +305,6 @@ export class CompleterComponent implements OnInit {
         /**
          *
          */
-        this.selected.emit({group: this.group, item: null});
+        this.selected.emit({group: {key: this.group.key}, item: null});
     }
 }

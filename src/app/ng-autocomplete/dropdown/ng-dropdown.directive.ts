@@ -171,7 +171,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     EmitSelected() {
         if(this.FindActive() > -1) {
-            this.selected.emit(this.DeReference(this._list[this.FindActive()]));
+            this.selected.emit(this._list[this.FindActive()].key);
         }
     }
 
@@ -266,9 +266,13 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             /**
              *
              */
-            if (this.FindActive() === -1) {
+            if (this.FindActive() < 0) {
                 setTimeout(() => {
                     this._eref.nativeElement.scrollTop = 0;
+                }, 0);
+            } else {
+                setTimeout(() => {
+                    this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetHeight * this.FindActive();
                 }, 0);
             }
         }
@@ -311,7 +315,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this.ClearActive();
 
         this._list[index].active = true;
-        this.hover.emit(this.DeReference(this._list[index]));
+        this.hover.emit(this._list[index].key);
         /**
          *
          */
@@ -349,10 +353,10 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     PrepareList() {
-        this._list = this.list.map((item) => {
+        this._list = Object.keys(this.list).map((key) => {
             return {
-                item: item,
-                active: this.ActiveItem(item)
+                key,
+                active: this.ActiveItem(key)
             }
         });
 
@@ -369,7 +373,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     ActiveItem(item: any) {
-        return this.active !== null && item.id === this.active.id;
+        return this.active !== null && item === this.active;
     }
 
     /**

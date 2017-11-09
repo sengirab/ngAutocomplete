@@ -260,7 +260,7 @@ export class AppComponent implements OnInit {
      * @constructor
      */
     Selected(item: SelectedAutocompleteItem) {
-        this.form.controls['items'] = this._fb.array([...this.form.controls['items'].value, item.item.original]);
+        this.form.controls['items'] = this._fb.array([...this.form.controls['items'].value, item.original]);
        
         console.log(item);
     }
@@ -268,6 +268,10 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.7.12] - 2017-11-08.
+- Big performance refactor.
+    - Instead of using arrays, now uses objects. Search by object key.
+- New @output, (no-results) emits GroupNoResult.
 ## [1.5.12], [1.6.12], [1.7.12] - 2017-08-29.
 - A lot of internal changes & bugfixes.
 - In some cases when the a view has a hidden ng-content, that shows if an expression evaluates to true and 

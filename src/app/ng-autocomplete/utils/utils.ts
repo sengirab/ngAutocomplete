@@ -1,4 +1,26 @@
-import {AutocompleteItem} from "../classes/AutocompleteItem";
+import { AutocompleteItem } from '../classes/AutocompleteItem';
+
+const UsedCodeList = {
+    ArrowDown:      40,
+    ArrowUp:        38,
+    Enter:          13,
+    Escape:         27,
+    Tab:            9,
+    MetaLeft:       91,
+    AltLeft:        18,
+    ControlLeft:    17,
+    ShiftLeft:      16,
+    ArrowLeft:      37,
+    ArrowRight:     39,
+    MetaRight:      93,
+    AltRight:       18
+};
+
+export interface GroupNoResult {
+    group: {key: string};
+    query: string;
+}
+
 /**
  *
  * @param array
@@ -41,6 +63,6 @@ export function IsMobileOrTablet() {
     return isMobile
 }
 
-export function ReturnInterval() {
-
+export function NotUsedKey(code: string) {
+    return typeof UsedCodeList[code] === 'undefined';
 }

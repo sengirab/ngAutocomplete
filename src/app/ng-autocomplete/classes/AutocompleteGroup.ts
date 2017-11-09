@@ -1,19 +1,18 @@
-import {AutocompleteItem} from "./AutocompleteItem";
-import {FilterRemovals} from "../utils/utils";
+import { AutocompleteItem } from './AutocompleteItem';
 
 export class AutocompleteGroup {
-    initialValue: AutocompleteItem[] = [];
+    initialValue: { [value: string]: AutocompleteItem };
 
     key: string;
     keys: { titleKey: string, childrenKey: string | null };
-    value: AutocompleteItem[];
+    value: { [value: string]: AutocompleteItem };
     remove: string[];
     placeholder: string;
     parent: string;
     completion: boolean;
 
     private removals: string[] = [];
-    private _copy: AutocompleteItem[] = [];
+    private _copy: { [value: string]: AutocompleteItem };
 
     constructor() {
 
@@ -25,15 +24,15 @@ export class AutocompleteGroup {
      * @param titleKey
      * @constructor
      */
-    SetNewValue(value: { id: string|number; [value: string]: any }[], titleKey: string) {
-        const values = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, titleKey));
+    SetNewValue(value: { id: string | number; [value: string]: any }[], titleKey: string) {
+        const values = AutocompleteItem.SearchableAutoCompleteItems(value, titleKey);
         this.SetCopy(values);
 
         /**
          *
          * @type {AutocompleteItem[]}
          */
-        this.value = FilterRemovals(this.removals, values);
+        this.value = this.FilterRemovals(this.removals, values);
     }
 
     /**
@@ -48,7 +47,7 @@ export class AutocompleteGroup {
          *
          * @type {AutocompleteItem[]}
          */
-        this.value = FilterRemovals(this.removals, this._copy);
+        this.value = this.FilterRemovals(this.removals, this._copy);
     }
 
     /**
@@ -56,7 +55,7 @@ export class AutocompleteGroup {
      * @constructor
      */
     InitialValue() {
-        this.value = FilterRemovals(this.removals, this.initialValue);
+        this.value = this.FilterRemovals(this.removals, this.initialValue);
 
         /**
          *
@@ -68,7 +67,7 @@ export class AutocompleteGroup {
      *
      * @constructor
      */
-    SetCopy(values: AutocompleteItem[]) {
+    SetCopy(values: { [value: string]: AutocompleteItem }) {
         this._copy = Object.assign([], values);
     }
 
@@ -77,18 +76,60 @@ export class AutocompleteGroup {
      * @param value
      * @constructor
      */
-    SetValues(value: { id?: string|number; [value: string]: any }[]) {
-        this.value = value.map((item) => AutocompleteItem.TransformToAutocompleteItem(item, this.keys.titleKey, this.keys.childrenKey));
+    SetValues(value: { id?: string | number; [value: string]: any }[]) {
+        this.value = AutocompleteItem.SearchableAutoCompleteItems(value, this.keys.titleKey, this.keys.childrenKey);
 
         /**
          *
          */
-        this.initialValue = Object.assign([], this.value);
-        this.SetCopy(Object.assign([], this.value));
+        this.initialValue = Object.assign({}, this.value);
+        this.SetCopy(Object.assign({}, this.value));
+    }
+
+    /**
+     *
+     * @param {any[]} removals
+     * @param value
+     * @constructor
+     */
+    FilterRemovals(removals: any[], value: { [value: string]: AutocompleteItem }): { [value: string]: AutocompleteItem } {
+        let filtered = Object.assign({}, value);
+
+        let key, keys = [];
+        for (key in filtered) {
+            if (filtered.hasOwnProperty(key)) {
+                removals.forEach((id) => {
+                    // Comparable string and ID
+                    let f = `_id_${String(id)}`;
+                    let c = key.substring(key.indexOf(f), key.length);
+
+                    if (f === c) {
+                        keys.push(key);
+                    }
+                })
+            }
+        }
+
+        keys.forEach((k) => {
+            delete filtered[k];
+        });
+
+        return filtered;
     }
 }
 
-export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string|number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
+/**
+ *
+ * @param {string} placeholder
+ * @param {string} key
+ * @param value
+ * @param keys
+ * @param {string} parent
+ * @param {boolean} completion
+ * @returns {AutocompleteGroup}
+ * @constructor
+ */
+export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string | number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
     const group = new AutocompleteGroup();
 
     group.key = key;

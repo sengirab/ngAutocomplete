@@ -1,13 +1,21 @@
 import {
-    AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output,
+    AfterViewChecked,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
     QueryList,
+    SimpleChanges,
     ViewChild,
     ViewChildren
 } from '@angular/core';
 import { AutocompleteGroup } from './classes/AutocompleteGroup';
 import { SelectedAutocompleteItem } from './classes/typing';
 import { CompleterComponent } from './completer/completer.component';
-import { ReturnStringArrayByID } from './utils/utils';
+import { GroupNoResult, ReturnStringArrayByID } from './utils/utils';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -15,15 +23,17 @@ import { Subject } from 'rxjs/Subject';
     template: `
         <div #init style="display: none;"><span class="after-view-init"></span></div>
         <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)"
+                      (no-result)="NoResult($event)"
                       (selected)="ListenToSelected($event)"
                       [group]="item"></ng-completer>
     `
 })
-export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterContentInit, AfterViewChecked {
+export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChanges {
     @ViewChildren(CompleterComponent) public completers: QueryList<CompleterComponent>;
     @ViewChild('init') public init: ElementRef;
 
     @Output() public selected: EventEmitter<SelectedAutocompleteItem> = new EventEmitter<SelectedAutocompleteItem>();
+    @Output('no-result') public noResult: EventEmitter<GroupNoResult> = new EventEmitter<GroupNoResult>();
 
     @Input() public group: AutocompleteGroup[] = [];
     @Input() public key: string = '';
@@ -32,6 +42,10 @@ export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterCont
     _viewHasBeenInit: boolean = false;
 
     constructor() {
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+
     }
 
     /**
@@ -43,23 +57,10 @@ export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterCont
     /**
      *
      */
-    ngAfterViewInit() {
-    }
-
-    /**
-     *
-     */
-    ngAfterContentInit() {
-
-    }
-
-    /**
-     *
-     */
     ngAfterViewChecked() {
         let el = this.init.nativeElement.querySelector('.after-view-init');
 
-        if(window.getComputedStyle(el).length > 0) {
+        if (window.getComputedStyle(el).length > 0) {
             this._viewHasBeenInit = true;
         }
     }
@@ -76,6 +77,15 @@ export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterCont
          *
          */
         this.SetChildren(selected);
+    }
+
+    /**
+     *
+     * @constructor
+     * @param group
+     */
+    NoResult(group: GroupNoResult) {
+        this.noResult.emit(group)
     }
 
     /**
@@ -254,9 +264,12 @@ export class NgAutocompleteComponent implements OnInit, AfterViewInit, AfterCont
         this.SubscribeInput(
             key,
             (completer) => {
-                completer._items.forEach((item) => {
-                    if (item.id == id) {
-                        completer.SelectItem(item);
+                Object.keys(completer._items).forEach((key) => {
+                    let f = `_id_${String(id)}`;
+                    let c = key.substring(key.indexOf(f), key.length);
+
+                    if (f === c) {
+                        completer.SelectItem(completer._items[key]);
                     }
                 });
 

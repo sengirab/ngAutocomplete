@@ -23,15 +23,16 @@
     <!--<div style="clear: both;"></div>-->
 <!--</div>-->
 
-<!--<div>-->
-    <!--<h1>REMOVE</h1>-->
-    <!--<ng-autocomplete (selected)="RemoveSelected($event)" [classes]="['']"-->
-                     <!--[group]="group5" [key]="'group5'"></ng-autocomplete>-->
-    <!--<div style="clear: both;"></div>-->
-<!--</div>-->
-
 <div>
-    <app-ng-view>
-        <app-ng-holder></app-ng-holder>
-    </app-ng-view>
+    <ng-autocomplete (selected)="Selected($event)"
+                     (no-result)="NoResult($event)"
+                     [classes]="['']"
+                     [group]="groupStress1" [key]="'item1'"></ng-autocomplete>
+    <div style="clear: both;"></div>
 </div>
+
+<!--<div>-->
+    <!--<app-ng-view>-->
+        <!--<app-ng-holder></app-ng-holder>-->
+    <!--</app-ng-view>-->
+<!--</div>-->

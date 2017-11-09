@@ -1,12 +1,12 @@
 {
   "name": "ng-auto-complete",
-  "version": "1.7.12",
+  "version": "2.7.12",
   "license": "MIT",
   "main": "ng-autocomplete.umd.js",
   "jsnext:main": "ng-autocomplete.esm.js",
   "module": "ng-autocomplete.esm.js",
   "types": "ng-autocomplete.d.ts",
-  "description": "Light-weight autocomplete component for Angular2.",
+  "description": "Light-weight autocomplete component for Angular.",
   "url": "https://github.com/sengirab/ngAutocomplete",
   "email": "benjamin@codebridge.nl",
   "repository": {
@@ -15,6 +15,8 @@
   },
   "keywords": [
     "angular2",
+    "angular4",
+    "angularJS",
     "ng",
     "ng2",
     "ng-autocomplete",
