@@ -33,6 +33,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     _open: boolean = false;
     _list: { active: boolean, [value: string]: any }[] = [];
     _class: string = '';
+    wheelHandler: any;
 
     constructor(public _eref: ElementRef) {
     }
@@ -435,15 +436,22 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     ngOnDestroy() {
         if (this.RefExists()) {
-            this.input.removeEventListener('keydown');
+            this.wheelHandler = this.removeEventListner.bind(this.input);
+            // this.input.removeEventListener('keydown');
         }
 
         if(!this.completion) {
-            document.removeEventListener('keydown');
+            this.wheelHandler = this.removeEventListner.bind(document);
+            // document.removeEventListener('keydown');
         }
 
         if(!IsMobileOrTablet()) {
-            this._eref.nativeElement.removeEventListener('mouseover');
+            this.wheelHandler = this.removeEventListner.bind(this._eref);
+            // this._eref.nativeElement.removeEventListener('mouseover');
         }
+    }
+
+    removeEventListner(elem: Element) {
+        elem.removeEventListener('wheel', this.wheelHandler, true);
     }
 }
