@@ -268,6 +268,35 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.8.12] - 2018-05-09.
+### New Functionality.
+- Created new functions to add custom ng-templates.
+  - Every ng template receives a context that's equal to an AutocompleteItem type. Except for the dropdownValue, this receives a hightlight too. see example
+  - template parameter must be of type: dropdownValue | placeholderValue | noResults
+   ```typescript
+    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+
+    @ViewChild('dropdownValue') dropdownValue: TemplateRef<any>;
+    @ViewChild('placeholderValue') placeholderValue: TemplateRef<any>;
+    @ViewChild('noResults') noResults: TemplateRef<any>;
+
+    this.completer.SetTemplate('completer', 'dropdownValue', this.dropdownValue);
+    this.completer.SetTemplate('completer', 'noResults', this.noResults);
+    this.completer.SetTemplate('completer', 'placeholderValue', this.placeholderValue);
+    ```
+    ```html
+    <ng-template #dropdownValue let-value let-hightlight="highlight">
+        <div [innerHTML]="hightlight"></div>
+    </ng-template>
+  
+    <ng-template #placeholderValue let-value>
+        {{value.title}}
+    </ng-template>
+    
+    <ng-template #noResults let-value>
+      Hey, you searched for: {{value}}. But there are no results!
+    </ng-template>
+    ```
 ## [2.7.12] - 2017-11-08.
 - Big performance refactor.
     - Instead of using arrays, now uses objects. Search by object key.

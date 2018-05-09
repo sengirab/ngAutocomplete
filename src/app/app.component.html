@@ -31,6 +31,18 @@
     <div style="clear: both;"></div>
 </div>
 
+<ng-template #dropdownValue let-value let-hightlight="highlight">
+    <div [innerHTML]="hightlight"></div>
+</ng-template>
+
+<ng-template #placeholderValue let-value>
+    {{value.title}}
+</ng-template>
+
+<ng-template #noResults let-value>
+  Hey, you searched for: {{value}}. But there are no results!
+</ng-template>
+
 <!--<div>-->
     <!--<app-ng-view>-->
         <!--<app-ng-holder></app-ng-holder>-->

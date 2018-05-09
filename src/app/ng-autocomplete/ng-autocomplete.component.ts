@@ -1,16 +1,16 @@
 import {
-    AfterViewChecked,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    QueryList,
-    SimpleChanges,
-    ViewChild,
-    ViewChildren
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  QueryList,
+  SimpleChanges, TemplateRef,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { AutocompleteGroup } from './classes/AutocompleteGroup';
 import { SelectedAutocompleteItem } from './classes/typing';
@@ -251,6 +251,27 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
                  */
                 this.TriggerChange();
             }
+        );
+    }
+
+    /**
+     *
+     * @param {string} key
+     * @param {"noResults" | "selectedValue"} type
+     * @param {TemplateRef<any>} template
+     * @constructor
+     */
+    SetTemplate(key: string, type: 'noResults' | 'placeholderValue' | 'dropdownValue', template: TemplateRef<any>) {
+        this.SubscribeInput(
+          key,
+          (completer) => {
+            completer.group[type] = template;
+
+            /**
+             * Items may have changed, need to te re-set list in completer components.
+             */
+            this.TriggerChange();
+          }
         );
     }
 

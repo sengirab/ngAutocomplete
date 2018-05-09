@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
 import {CreateNewAutocompleteGroup} from "./ng-autocomplete/classes/AutocompleteGroup";
 import {SelectedAutocompleteItem} from "./ng-autocomplete/classes/typing";
 import {NgAutocompleteComponent} from "./ng-autocomplete/ng-autocomplete.component";
@@ -8,9 +8,13 @@ import { GroupNoResult } from './ng-autocomplete/utils/utils';
     selector: 'app-root',
     templateUrl: './app.component.html',
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
     // @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
     @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+
+    @ViewChild('placeholderValue') placeholderValue: TemplateRef<any>;
+    @ViewChild('dropdownValue') dropdownValue: TemplateRef<any>;
+    @ViewChild('noResults') noResults: TemplateRef<any>;
 
     _removables = [];
 
@@ -107,7 +111,8 @@ export class AppComponent implements AfterViewInit {
             'items1',
             this.FillArray(),
             {titleKey: 'title', childrenKey: null},
-            ''
+            '',
+            true,
         )
     ];
 
@@ -135,7 +140,7 @@ export class AppComponent implements AfterViewInit {
      */
     FillArray() {
         let arr = [];
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 20; i++) {
             arr.push({title: `Option ${i} Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, id: i});
         }
 
@@ -155,6 +160,12 @@ export class AppComponent implements AfterViewInit {
 
     }
 
+    ngOnInit() {
+        this.completer.SetTemplate('items1', 'dropdownValue', this.dropdownValue);
+        this.completer.SetTemplate('items1', 'noResults', this.noResults);
+        this.completer.SetTemplate('items1', 'placeholderValue', this.placeholderValue);
+    }
+
     /**
      *
      */
@@ -164,7 +175,7 @@ export class AppComponent implements AfterViewInit {
 
     /**
      *
-     * @param itemt
+     * @param item
      * @constructor
      */
     Selected(item: SelectedAutocompleteItem) {

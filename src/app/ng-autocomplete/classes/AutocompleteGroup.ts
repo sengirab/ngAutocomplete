@@ -1,4 +1,5 @@
 import { AutocompleteItem, SearchableAutoCompleteItems } from './AutocompleteItem';
+import { TemplateRef } from '@angular/core';
 
 export class AutocompleteGroup {
     initialValue: { [value: string]: AutocompleteItem };
@@ -10,6 +11,11 @@ export class AutocompleteGroup {
     placeholder: string;
     parent: string;
     completion: boolean;
+
+    // Templates
+    noResults: TemplateRef<any>;
+    dropdownValue: TemplateRef<any>;
+    placeholderValue: TemplateRef<any>;
 
     private removals: string[] = [];
     private _copy: { [value: string]: AutocompleteItem };
