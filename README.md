@@ -268,6 +268,36 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.9.12] - 2018-05-11.
+### New Functionality.
+- Support for async functions.
+  - Useful for when you want to use your own API to return results.
+  ```typescript
+  @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+
+  const async = (str: string) => {
+      return new Promise((resolve) => {
+          setTimeout(() => {
+              resolve([
+                  {
+                      id: 0,
+                      title: `Test case 1 ${str}`
+                  },
+                  {
+                      id: 1,
+                      title: `Test case 2 ${str}`
+                  },
+                  {
+                      id: 2,
+                      title: `Test case 3 ${str}`
+                  }
+              ])
+          }, 2000)
+      });
+  };
+
+  this.completer.SetAsync('completer', async);
+  ```
 ## [2.8.12] - 2018-05-09.
 ### New Functionality.
 - Created new functions to add custom ng-templates.

@@ -24,7 +24,7 @@
 <!--</div>-->
 
 <div>
-    <ng-autocomplete (selected)="Selected($event)"
+    <ng-autocomplete (selected)="RemoveSelected($event)"
                      (no-result)="NoResult($event)"
                      [classes]="['']"
                      [group]="groupStress1" [key]="'item1'"></ng-autocomplete>
@@ -40,7 +40,7 @@
 </ng-template>
 
 <ng-template #noResults let-value>
-  Hey, you searched for: {{value}}. But there are no results!
+    Hey, you searched for: {{value}}. But there are no results!
 </ng-template>
 
 <!--<div>-->

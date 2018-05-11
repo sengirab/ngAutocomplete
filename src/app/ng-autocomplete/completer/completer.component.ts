@@ -125,7 +125,11 @@ export class CompleterComponent implements OnInit {
                 .debounceTime(300)
                 .subscribe((value: string) => {
                     this._zone.run(() => {
-                        this.OnModelChange(value)
+                        if(this.group.async !== null) {
+                          this.RunAsyncFunction(value);
+                        } else {
+                          this.OnModelChange(value)
+                        }
                     });
                 });
         });
@@ -222,9 +226,22 @@ export class CompleterComponent implements OnInit {
         this._completer = i.title;
         this._highlight = '';
 
-
         this.dropdown.Close(null, true);
         this.selected.emit({group: {key: this.group.key}, item: i});
+    }
+
+    /**
+     *
+     * @param {string} value
+     * @returns {Promise<void>}
+     * @constructor
+     */
+    async RunAsyncFunction(value: string) {
+        let values = await this.group.async(value);
+
+        this.group.SetNewValue(values, this.group.keys.titleKey);
+
+        this.OnModelChange(value);
     }
 
     /**

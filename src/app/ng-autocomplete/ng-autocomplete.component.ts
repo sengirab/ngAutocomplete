@@ -263,15 +263,35 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
      */
     SetTemplate(key: string, type: 'noResults' | 'placeholderValue' | 'dropdownValue', template: TemplateRef<any>) {
         this.SubscribeInput(
-          key,
-          (completer) => {
-            completer.group[type] = template;
+            key,
+            (completer) => {
+              completer.group[type] = template;
 
-            /**
-             * Items may have changed, need to te re-set list in completer components.
-             */
-            this.TriggerChange();
-          }
+              /**
+               * Items may have changed, need to te re-set list in completer components.
+               */
+              this.TriggerChange();
+            }
+        );
+    }
+
+    /**
+     *
+     * @param {string} key
+     * @param promise
+     * @constructor
+     */
+    SetAsync(key: string, promise: (str: string) => Promise<{ id: string | number; [value: string]: any }[]>) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+              completer.group.async = promise;
+
+              /**
+               * Items may have changed, need to te re-set list in completer components.
+               */
+              this.TriggerChange();
+            }
         );
     }
 

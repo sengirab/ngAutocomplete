@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
             'items1',
-            this.FillArray(),
+            [],
             {titleKey: 'title', childrenKey: null},
             '',
             true,
@@ -161,6 +161,29 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        const async = (str: string) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve([
+                        {
+                            id: 0,
+                            title: `Test case 1 ${str}`
+                        },
+                        {
+                            id: 1,
+                            title: `Test case 2 ${str}`
+                        },
+                        {
+                            id: 2,
+                            title: `Test case 3 ${str}`
+                        }
+                    ])
+                }, 2000)
+            });
+        };
+
+        this.completer.SetAsync('items1', async);
+
         this.completer.SetTemplate('items1', 'dropdownValue', this.dropdownValue);
         this.completer.SetTemplate('items1', 'noResults', this.noResults);
         this.completer.SetTemplate('items1', 'placeholderValue', this.placeholderValue);
@@ -187,14 +210,13 @@ export class AppComponent implements OnInit, AfterViewInit {
      * @param item
      * @constructor
      */
-    // RemoveSelected(item: SelectedAutocompleteItem) {
-    //     if(item.item !== null) {
-    //         this._removables.push(item.item);
-    //     }
-    //
-    //     const component = NgAutocompleteComponent.FindCompleter('group5', this.completers);
-    //     component.RemovableValues('remove', this._removables);
-    // }
+    RemoveSelected(item: SelectedAutocompleteItem) {
+        if(item.item !== null) {
+            this._removables.push(item.item);
+        }
+
+        this.completer.RemovableValues('items1', this._removables);
+    }
 
     /**
      *

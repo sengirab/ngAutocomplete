@@ -11,6 +11,7 @@ export class AutocompleteGroup {
     placeholder: string;
     parent: string;
     completion: boolean;
+    async: (str: string) => Promise<{ id: string | number; [value: string]: any }[]> = null;
 
     // Templates
     noResults: TemplateRef<any>;
@@ -21,7 +22,6 @@ export class AutocompleteGroup {
     private _copy: { [value: string]: AutocompleteItem };
 
     constructor() {
-
     }
 
     /**
