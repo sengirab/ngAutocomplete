@@ -12,7 +12,7 @@ import { GroupNoResult } from '../utils/utils';
 @Component({
     selector: 'ng-completer',
     template: `
-      <div #element class="ng-autocomplete-dropdown" [ngClass]="{'open': dropdown._open}">
+      <div #element class="ng-autocomplete-dropdown" [ngClass]="{'open': dropdown._open, 'is-loading': _DOM.isLoading, 'is-async': group.async !== null}">
 
         <!--GROUP: {{group.key}}-->
 
@@ -39,7 +39,7 @@ import { GroupNoResult } from '../utils/utils';
         </div>
 
         <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
-             [ngClass]="{'is-initial-empty': _DOM.empty, 'is-loading': _DOM.isLoading}"
+             [ngClass]="{'is-initial-empty': _DOM.empty}"
              [active]="_DOM.selected" [key]="group.key"
              [completion]="group.completion"
              (hover)="OnHoverDropdownItem($event)"

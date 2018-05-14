@@ -19,15 +19,13 @@ this is so you could style it the way you want it.
 
 If you like the styling i did for the example .gif shown above, you can copy it from [here.](https://github.com/sengirab/ngAutocomplete/blob/master/src/styles.css)
 ### Classes
-- .ng-autocomplete-dropdown (.open)
+- .ng-autocomplete-dropdown (.open .is-loading .is-async)
 - .ng-autocomplete-inputs
 - .ng-autocomplete-input
 - .ng-autocomplete-placeholder
 - .ng-autocomplete-dropdown-icon (.open)
-- .ng-dropdown (.open)
-- .ng-dropdown (.is-loading)
-- .ng-dropdown (.is-initial-empty)
-- .dropdown-item
+- .ng-dropdown (.open .is-initial-empty)
+- .dropdown-item (.active)
 
 
 # Responses !Important
@@ -270,6 +268,8 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.10.1] - 2018-05-14.
+- Added new classes to wrong element.
 ## [2.10.0] - 2018-05-14.
 - Changes to behaviour of the dropdown (mainly for async).
   - Dropdown now only opens when there's a default value at start. It will stay closed until it has a list to show. -- Represented by the class: is-initial-empty.
