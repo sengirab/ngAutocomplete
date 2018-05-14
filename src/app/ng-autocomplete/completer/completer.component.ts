@@ -12,12 +12,12 @@ import { GroupNoResult } from '../utils/utils';
 @Component({
     selector: 'ng-completer',
     template: `
-        <div #element class="ng-autocomplete-dropdown">
+      <div #element class="ng-autocomplete-dropdown" [ngClass]="{'open': dropdown._open}">
 
-            <!--GROUP: {{group.key}}-->
+        <!--GROUP: {{group.key}}-->
 
-            <div class="ng-autocomplete-inputs" (click)="RegisterClick()"
-                 [ngClass]="{'completion-off': !group.completion, 'open': dropdown._open}">
+        <div class="ng-autocomplete-inputs" (click)="RegisterClick()"
+             [ngClass]="{'completion-off': !group.completion}">
                 <span class="ng-autocomplete-placeholder"
                       *ngIf="_DOM.placeholder">
                   <ng-container *ngIf="group.placeholderValue">
@@ -27,41 +27,43 @@ import { GroupNoResult } from '../utils/utils';
                       {{_DOM.placeholder.title}}
                   </ng-template>
                 </span>
-                <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
-                       (ngModelChange)="_change.next($event);"
-                       [value]="_completer"
-                       autocomplete="off"
-                       (click)="OpenDropdown()"
-                       (focus)="OpenDropdown()" class="ng-autocomplete-input">
+          <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
+                 (ngModelChange)="_change.next($event);"
+                 [value]="_completer"
+                 autocomplete="off"
+                 (click)="OpenDropdown()"
+                 (focus)="OpenDropdown()" class="ng-autocomplete-input">
 
-                <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
-                      (click)="DropdownArray()"></span>
-            </div>
+          <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
+                (click)="DropdownArray()"></span>
+        </div>
 
-            <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
-                 [active]="_DOM.selected" [key]="group.key"
-                 [completion]="group.completion"
-                 (hover)="OnHoverDropdownItem($event)"
-                 (selected)="SelectItem($event)"
-                 (closed)="OnInputBlurred()"
-            >
-                <div *ngIf="_DOM.empty && group.noResults" class="dropdown-item no-results">
-                    <ng-container *ngIf="group.noResults">
-                        <ng-template *ngTemplateOutlet="group.noResults; context: {$implicit: _completer}"></ng-template>
-                    </ng-container>
-                </div>
-                     
-                <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
-                     (click)="SelectItem(_items[item])">
-                  
-                    <ng-container *ngIf="group.dropdownValue">
-                        <ng-template *ngTemplateOutlet="group.dropdownValue; context: {$implicit: _items[item], highlight: _items[item].title | highlight:_highlight}"></ng-template>
-                    </ng-container>
-                  
-                    <div *ngIf="!group.dropdownValue" [innerHTML]="_items[item].title | highlight:_highlight"></div>
-                </div>
-            </div>
-        </div>`,
+        <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
+             [ngClass]="{'is-initial-empty': _DOM.empty, 'is-loading': _DOM.isLoading}"
+             [active]="_DOM.selected" [key]="group.key"
+             [completion]="group.completion"
+             (hover)="OnHoverDropdownItem($event)"
+             (selected)="SelectItem($event)"
+             (closed)="OnInputBlurred()"
+        >
+          <div *ngIf="_DOM.notFound && group.noResults" class="dropdown-item no-results">
+            <ng-container *ngIf="group.noResults">
+              <ng-template *ngTemplateOutlet="group.noResults; context: {$implicit: _completer}"></ng-template>
+            </ng-container>
+          </div>
+
+          <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
+               (click)="SelectItem(_items[item])">
+
+            <ng-container *ngIf="group.dropdownValue">
+              <ng-template
+                *ngTemplateOutlet="group.dropdownValue; context: {$implicit: _items[item], highlight: _items[item].title | highlight:_highlight}"></ng-template>
+            </ng-container>
+
+            <div *ngIf="!group.dropdownValue" [innerHTML]="_items[item].title | highlight:_highlight"></div>
+          </div>
+        </div>
+      </div>`,
     styles: [`
         .ng-autocomplete-inputs {
             position: relative;
@@ -87,6 +89,10 @@ import { GroupNoResult } from '../utils/utils';
             display: none;
         }
 
+        .ng-autocomplete-dropdown .ng-dropdown.is-empty {
+          display: none;
+        }
+
         .ng-autocomplete-dropdown .ng-dropdown.open {
             display: block;
         }
@@ -107,9 +113,12 @@ export class CompleterComponent implements OnInit {
     _highlight: string = '';
 
     _DOM = {
+        notFound: <boolean>false,
         empty: <boolean>false,
         placeholder: <AutocompleteItem>null,
-        selected: <string>''
+        selected: <string>'',
+        isLoading: <boolean>false
+
     };
 
     constructor(private _zone: NgZone) {
@@ -206,7 +215,8 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     SetItems() {
-        this._items = this.group.value
+        this._items = this.group.value;
+        this.IsInitialEmpty();
     }
 
     /**
@@ -237,11 +247,23 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     async RunAsyncFunction(value: string) {
-        let values = await this.group.async(value);
+        this._completer = value;
+        this._highlight = value;
 
-        this.group.SetNewValue(values, this.group.keys.titleKey);
+        this._DOM.selected = null;
 
-        this.OnModelChange(value);
+        if (value.length === 0) {
+            this.group.InitialValue();
+            this.ClearModel();
+        } else if (value.length > 2) {
+            this._DOM.isLoading = true;
+
+            let values = await this.group.async(value);
+            this.group.SetNewValue(values, this.group.keys.titleKey);
+
+            this._DOM.isLoading = false;
+            this.CompareItemsAndSet(value);
+        }
     }
 
     /**
@@ -253,28 +275,44 @@ export class CompleterComponent implements OnInit {
         this._completer = value;
         this._highlight = value;
 
+        this._DOM.selected = null;
+
         if (value.length === 0) {
-            this._DOM.selected = null;
-            this._DOM.empty = false;
-
-            this.cleared.emit(this.group.key);
+            this.ClearModel();
         } else if (value.length > 2) {
-
-            /**
-             *
-             * @type {AutocompleteItem[]}
-             * @private
-             */
-            const obj = {};
-            for (let key in this.group.value) {
-                if (ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
-                    obj[key] = this.group.value[key]
-                }
-            }
-
-            this._items = obj;
-            this.EmptySearch(this._items, value);
+            this.CompareItemsAndSet(value);
         }
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    ClearModel() {
+      this._DOM.selected = null;
+      this._DOM.notFound = false;
+
+      this.cleared.emit(this.group.key);
+    }
+
+    /**
+     *
+     * @constructor
+     */
+    CompareItemsAndSet(value: string) {
+        const obj = {};
+        for (let key in this.group.value) {
+            if (ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                obj[key] = this.group.value[key]
+            }
+        }
+
+        this._items = obj;
+        this.EmptySearch(this._items, value);
+
+        // User has typed something now, results could be shown. We need to remove the "is-initial-empty" class.
+        this.IsInitialEmpty();
+        this.dropdown.Open();
     }
 
     /**
@@ -312,6 +350,15 @@ export class CompleterComponent implements OnInit {
     // ! Utils                                                                //
     // =======================================================================//
 
+    IsInitialEmpty() {
+        if(Object.keys(this._items).length === 0 && this._completer.length === 0) {
+          this._DOM.empty = true;
+          return;
+        }
+
+        this._DOM.empty = false;
+    }
+
     /**
      *
      * @constructor
@@ -328,11 +375,11 @@ export class CompleterComponent implements OnInit {
      */
     EmptySearch(obj: Object, query: string) {
         if(Object.keys(obj).length > 0) {
-            this._DOM.empty = false;
+            this._DOM.notFound = false;
             return
         }
 
-        this._DOM.empty = true;
+        this._DOM.notFound = true;
         this.noResult.emit({group: {key: this.group.key}, query: query})
     }
 
@@ -344,6 +391,8 @@ export class CompleterComponent implements OnInit {
         this._completer = '';
         this._DOM.selected = null;
 
+        this.group.InitialValue();
+        this.IsInitialEmpty();
         /**
          *
          */

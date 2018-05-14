@@ -94,16 +94,8 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
      */
     InputCleared(key: string) {
         this.group.forEach((group) => {
-            if (group.key === key) {
+            if (group.key === key || group.parent === key) {
                 this.ResetInput(group.key);
-            }
-
-            /**
-             *
-             */
-            if (group.parent === key) {
-                this.ResetInput(group.key);
-                group.InitialValue();
             }
         });
 

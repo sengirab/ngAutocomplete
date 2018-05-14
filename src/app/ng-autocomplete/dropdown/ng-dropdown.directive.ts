@@ -260,23 +260,21 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      * @constructor
      */
     Open() {
-        if (!this._open) {
-            this._open = true;
-            this.PrepareList();
+        setTimeout(() => {
+            if (!this._open && !this._eref.nativeElement.classList.contains('is-initial-empty')) {
+                this._open = true;
+                this.PrepareList();
 
-            /**
-             *
-             */
-            if (this.FindActive() < 0) {
-                setTimeout(() => {
+                /**
+                 *
+                 */
+                if (this.FindActive() < 0) {
                     this._eref.nativeElement.scrollTop = 0;
-                }, 0);
-            } else {
-                setTimeout(() => {
+                } else {
                     this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetHeight * this.FindActive();
-                }, 0);
+                }
             }
-        }
+        }, 0);
     }
 
     /**

@@ -24,7 +24,7 @@
 <!--</div>-->
 
 <div>
-    <ng-autocomplete (selected)="RemoveSelected($event)"
+    <ng-autocomplete (selected)="Selected($event)"
                      (no-result)="NoResult($event)"
                      [classes]="['']"
                      [group]="groupStress1" [key]="'item1'"></ng-autocomplete>
