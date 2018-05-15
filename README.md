@@ -268,6 +268,8 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.10.2] - 2018-05-15.
+- Removed dropdown it's own comparison when using Async. Assuming the user will probably filter the results.
 ## [2.10.1] - 2018-05-14.
 - Added new classes to wrong element.
 ## [2.10.0] - 2018-05-14.

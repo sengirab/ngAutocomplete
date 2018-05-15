@@ -262,7 +262,13 @@ export class CompleterComponent implements OnInit {
             this.group.SetNewValue(values, this.group.keys.titleKey);
 
             this._DOM.isLoading = false;
-            this.CompareItemsAndSet(value);
+
+            this._items = this.group.value;
+            this.EmptySearch(this._items, value);
+
+            // User has typed something now, results could be shown. We need to remove the "is-initial-empty" class.
+            this.IsInitialEmpty();
+            this.dropdown.Open();
         }
     }
 
