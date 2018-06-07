@@ -11,6 +11,7 @@ export class AutocompleteGroup {
     placeholder: string;
     parent: string;
     completion: boolean;
+    searchLength: number;
     async: (str: string) => Promise<{ id: string | number; [value: string]: any }[]> = null;
 
     // Templates
@@ -135,7 +136,7 @@ export class AutocompleteGroup {
  * @returns {AutocompleteGroup}
  * @constructor
  */
-export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string | number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true): AutocompleteGroup {
+export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string | number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true, searchLength: number = 2): AutocompleteGroup {
     const group = new AutocompleteGroup();
 
     group.key = key;
@@ -143,6 +144,7 @@ export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, 
     group.placeholder = placeholder;
     group.parent = parent;
     group.completion = completion;
+    group.searchLength = searchLength;
 
     /**
      * Initial value needed, if we empty search box or want to clear it, it needs to be reset.

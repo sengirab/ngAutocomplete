@@ -268,6 +268,10 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [2.10.5] - 2018-06-07
+- Fixed an maximum callstack exceeded bug.
+## [2.10.3] / [2.10.4] - 2018-06-06
+- Added searchLength to options when create an autocomplete group, it configures when to fire a search. The number given is the amount of characters in the input.
 ## [2.10.2] - 2018-05-15.
 - Removed dropdown it's own comparison when using Async. Assuming the user will probably filter the results.
 ## [2.10.1] - 2018-05-14.

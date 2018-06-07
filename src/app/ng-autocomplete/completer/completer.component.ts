@@ -255,7 +255,9 @@ export class CompleterComponent implements OnInit {
         if (value.length === 0) {
             this.group.InitialValue();
             this.ClearModel();
-        } else if (value.length > 2) {
+
+            this.dropdown.Close('', true)
+        } else if (value.length > this.group.searchLength) {
             this._DOM.isLoading = true;
 
             let values = await this.group.async(value);
@@ -285,7 +287,9 @@ export class CompleterComponent implements OnInit {
 
         if (value.length === 0) {
             this.ClearModel();
-        } else if (value.length > 2) {
+
+            this.dropdown.Close('', true)
+        } else if (value.length > this.group.searchLength) {
             this.CompareItemsAndSet(value);
         }
     }

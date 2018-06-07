@@ -202,7 +202,7 @@ export class AppComponent implements OnInit, AfterViewInit {
      * @constructor
      */
     Selected(item: SelectedAutocompleteItem) {
-        console.log(item);
+        console.log('its actually saying its selected', item);
     }
 
     /**

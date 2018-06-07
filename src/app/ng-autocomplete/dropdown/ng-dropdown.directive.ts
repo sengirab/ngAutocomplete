@@ -230,6 +230,10 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     @HostListener('document:click', ['$event'])
     Close(event, force: boolean = false) {
+        if(!this._open) {
+            return;
+        }
+
         const close = () => {
             this._open = false;
 
