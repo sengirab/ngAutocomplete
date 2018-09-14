@@ -16,7 +16,7 @@ import { AutocompleteGroup } from './classes/AutocompleteGroup';
 import { SelectedAutocompleteItem } from './classes/typing';
 import { CompleterComponent } from './completer/completer.component';
 import { GroupNoResult, ReturnStringArrayByID } from './utils/utils';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ng-autocomplete',

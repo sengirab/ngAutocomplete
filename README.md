@@ -311,6 +311,8 @@ export class AppComponent implements OnInit {
 
   this.completer.SetAsync('completer', async);
   ```
+## [3.0.0] - 2018-09-14.
+- Updated to newest version of angular.
 ## [2.8.12] - 2018-05-09.
 ### New Functionality.
 - Created new functions to add custom ng-templates.

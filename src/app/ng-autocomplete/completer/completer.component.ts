@@ -1,23 +1,26 @@
-import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { AutocompleteGroup } from '../classes/AutocompleteGroup';
+import {debounceTime} from 'rxjs/operators';
+import {Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from '@angular/core';
+import {AutocompleteGroup} from '../classes/AutocompleteGroup';
 import {
-    AutocompleteItem, ComparableAutoCompleteString, SearchableAutoCompleteString,
+    AutocompleteItem,
+    ComparableAutoCompleteString,
+    SearchableAutoCompleteString,
     StrippedAutocompleteGroup
 } from '../classes/AutocompleteItem';
-import { NgDropdownDirective } from '../dropdown/ng-dropdown.directive';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import { GroupNoResult } from '../utils/utils';
+import {NgDropdownDirective} from '../dropdown/ng-dropdown.directive';
+import {GroupNoResult} from '../utils/utils';
+import {Subject} from 'rxjs/Rx';
 
 @Component({
     selector: 'ng-completer',
     template: `
-      <div #element class="ng-autocomplete-dropdown" [ngClass]="{'open': dropdown._open, 'is-loading': _DOM.isLoading, 'is-async': group.async !== null}">
+        <div #element class="ng-autocomplete-dropdown"
+             [ngClass]="{'open': dropdown._open, 'is-loading': _DOM.isLoading, 'is-async': group.async !== null}">
 
-        <!--GROUP: {{group.key}}-->
+            <!--GROUP: {{group.key}}-->
 
-        <div class="ng-autocomplete-inputs" (click)="RegisterClick()"
-             [ngClass]="{'completion-off': !group.completion}">
+            <div class="ng-autocomplete-inputs" (click)="RegisterClick()"
+                 [ngClass]="{'completion-off': !group.completion}">
                 <span class="ng-autocomplete-placeholder"
                       *ngIf="_DOM.placeholder">
                   <ng-container *ngIf="group.placeholderValue">
@@ -27,43 +30,43 @@ import { GroupNoResult } from '../utils/utils';
                       {{_DOM.placeholder.title}}
                   </ng-template>
                 </span>
-          <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
-                 (ngModelChange)="_change.next($event);"
-                 [value]="_completer"
-                 autocomplete="off"
-                 (click)="OpenDropdown()"
-                 (focus)="OpenDropdown()" class="ng-autocomplete-input">
+                <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
+                       (ngModelChange)="_change.next($event);"
+                       [value]="_completer"
+                       autocomplete="off"
+                       (click)="OpenDropdown()"
+                       (focus)="OpenDropdown()" class="ng-autocomplete-input">
 
-          <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
-                (click)="DropdownArray()"></span>
-        </div>
+                <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
+                      (click)="DropdownArray()"></span>
+            </div>
 
-        <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
-             [ngClass]="{'is-initial-empty': _DOM.empty}"
-             [active]="_DOM.selected" [key]="group.key"
-             [completion]="group.completion"
-             (hover)="OnHoverDropdownItem($event)"
-             (selected)="SelectItem($event)"
-             (closed)="OnInputBlurred()"
-        >
-          <div *ngIf="_DOM.notFound && group.noResults" class="dropdown-item no-results">
-            <ng-container *ngIf="group.noResults">
-              <ng-template *ngTemplateOutlet="group.noResults; context: {$implicit: _completer}"></ng-template>
-            </ng-container>
-          </div>
+            <div class="ng-dropdown" ngDropdown [list]="_items" [element]="element" [input]="input"
+                 [ngClass]="{'is-initial-empty': _DOM.empty}"
+                 [active]="_DOM.selected" [key]="group.key"
+                 [completion]="group.completion"
+                 (hover)="OnHoverDropdownItem($event)"
+                 (selected)="SelectItem($event)"
+                 (closed)="OnInputBlurred()"
+            >
+                <div *ngIf="_DOM.notFound && group.noResults" class="dropdown-item no-results">
+                    <ng-container *ngIf="group.noResults">
+                        <ng-template *ngTemplateOutlet="group.noResults; context: {$implicit: _completer}"></ng-template>
+                    </ng-container>
+                </div>
 
-          <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
-               (click)="SelectItem(_items[item])">
+                <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
+                     (click)="SelectItem(_items[item])">
 
-            <ng-container *ngIf="group.dropdownValue">
-              <ng-template
-                *ngTemplateOutlet="group.dropdownValue; context: {$implicit: _items[item], highlight: _items[item].title | highlight:_highlight}"></ng-template>
-            </ng-container>
+                    <ng-container *ngIf="group.dropdownValue">
+                        <ng-template
+                            *ngTemplateOutlet="group.dropdownValue; context: {$implicit: _items[item], highlight: _items[item].title | highlight:_highlight}"></ng-template>
+                    </ng-container>
 
-            <div *ngIf="!group.dropdownValue" [innerHTML]="_items[item].title | highlight:_highlight"></div>
-          </div>
-        </div>
-      </div>`,
+                    <div *ngIf="!group.dropdownValue" [innerHTML]="_items[item].title | highlight:_highlight"></div>
+                </div>
+            </div>
+        </div>`,
     styles: [`
         .ng-autocomplete-inputs {
             position: relative;
@@ -90,7 +93,7 @@ import { GroupNoResult } from '../utils/utils';
         }
 
         .ng-autocomplete-dropdown .ng-dropdown.is-empty {
-          display: none;
+            display: none;
         }
 
         .ng-autocomplete-dropdown .ng-dropdown.open {
@@ -130,14 +133,14 @@ export class CompleterComponent implements OnInit {
     ngOnInit() {
         this._zone.runOutsideAngular(() => {
 
-            this._change
-                .debounceTime(300)
+            this._change.pipe(
+                debounceTime(300))
                 .subscribe((value: string) => {
                     this._zone.run(() => {
-                        if(this.group.async !== null) {
-                          this.RunAsyncFunction(value);
+                        if (this.group.async !== null) {
+                            this.RunAsyncFunction(value);
                         } else {
-                          this.OnModelChange(value)
+                            this.OnModelChange(value)
                         }
                     });
                 });
@@ -299,10 +302,10 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     ClearModel() {
-      this._DOM.selected = null;
-      this._DOM.notFound = false;
+        this._DOM.selected = null;
+        this._DOM.notFound = false;
 
-      this.cleared.emit(this.group.key);
+        this.cleared.emit(this.group.key);
     }
 
     /**
@@ -361,9 +364,9 @@ export class CompleterComponent implements OnInit {
     // =======================================================================//
 
     IsInitialEmpty() {
-        if(Object.keys(this._items).length === 0 && this._completer.length === 0) {
-          this._DOM.empty = true;
-          return;
+        if (Object.keys(this._items).length === 0 && this._completer.length === 0) {
+            this._DOM.empty = true;
+            return;
         }
 
         this._DOM.empty = false;
@@ -384,7 +387,7 @@ export class CompleterComponent implements OnInit {
      * @constructor
      */
     EmptySearch(obj: Object, query: string) {
-        if(Object.keys(obj).length > 0) {
+        if (Object.keys(obj).length > 0) {
             this._DOM.notFound = false;
             return
         }
