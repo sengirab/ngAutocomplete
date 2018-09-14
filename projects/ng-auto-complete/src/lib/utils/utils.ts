@@ -23,9 +23,6 @@ export interface GroupNoResult {
 
 /**
  *
- * @param array
- * @returns {Array}
- * @constructor
  */
 export function ReturnStringArrayByID(array: { id: string | number, [value: string]: any }[]) {
     return array.reduce((result, item) => {
@@ -37,10 +34,6 @@ export function ReturnStringArrayByID(array: { id: string | number, [value: stri
 
 /**
  *
- * @param removals
- * @param list
- * @returns {Array}
- * @constructor
  */
 export function FilterRemovals(removals: string[], list: AutocompleteItem[]) {
     return list.filter((item) => {
@@ -50,8 +43,6 @@ export function FilterRemovals(removals: string[], list: AutocompleteItem[]) {
 
 /**
  *
- * @returns {boolean}
- * @constructor
  */
 export function IsMobileOrTablet() {
     let isMobile = false;

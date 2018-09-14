@@ -1,16 +1,13 @@
-import {AfterViewInit, Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
-import {CreateNewAutocompleteGroup} from "./ng-autocomplete/classes/AutocompleteGroup";
-import {SelectedAutocompleteItem} from "./ng-autocomplete/classes/typing";
-import {NgAutocompleteComponent} from "./ng-autocomplete/ng-autocomplete.component";
-import { GroupNoResult } from './ng-autocomplete/utils/utils';
+import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {CreateNewAutocompleteGroup, GroupNoResult, NgAutoCompleteComponent, SelectedAutocompleteItem} from 'ng-auto-complete';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-    // @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    // @ViewChildren(NgAutoCompleteComponent) public completers: QueryList<NgAutoCompleteComponent>;
+    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 
     @ViewChild('placeholderValue') placeholderValue: TemplateRef<any>;
     @ViewChild('dropdownValue') dropdownValue: TemplateRef<any>;
@@ -177,8 +174,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             id: 2,
                             title: `Test case 3 ${str}`
                         }
-                    ])
-                }, 2000)
+                    ]);
+                }, 2000);
             });
         };
 
@@ -211,7 +208,7 @@ export class AppComponent implements OnInit, AfterViewInit {
      * @constructor
      */
     RemoveSelected(item: SelectedAutocompleteItem) {
-        if(item.item !== null) {
+        if (item.item !== null) {
             this._removables.push(item.item);
         }
 
@@ -235,6 +232,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                 {title: 'Option 8', id: '5'},
                 {title: 'Option 9', id: '6'},
             ]
-        )
+        );
     }
 }

@@ -19,11 +19,6 @@ export class AutocompleteItem {
 
 /**
  *
- * @param items
- * @param titleKey
- * @param childrenKey
- * @constructor
- * @dynamic
  */
 export function SearchableAutoCompleteItems(items: { id?: string|number; [value: string]: any }[], titleKey: string, childrenKey: string | null = null): {[value: string]: AutocompleteItem} {
     return items.reduce(function (r, i) {
@@ -39,10 +34,6 @@ export function SearchableAutoCompleteItems(items: { id?: string|number; [value:
 
 /**
  *
- * @param key
- * @param {string | number} id
- * @returns {string}
- * @constructor
  */
 export function SearchableAutoCompleteString(key: string, id: string|number) {
     return `${key.replace(/ /g,"_")}_id_${String(id)}`;
@@ -50,9 +41,6 @@ export function SearchableAutoCompleteString(key: string, id: string|number) {
 
 /**
  *
- * @param {string} str
- * @returns {string}
- * @constructor
  */
 export function ComparableAutoCompleteString(str: string) {
     return str.replace(/_/g," ");
@@ -60,7 +48,6 @@ export function ComparableAutoCompleteString(str: string) {
 
 /**
  * object must have an ID
- * @constructor
  */
 
 export function TransformToAutocompleteItem(object: { id?: string | number; [value: string]: any }, titleKey: string, childrenKey: string | null = null) {

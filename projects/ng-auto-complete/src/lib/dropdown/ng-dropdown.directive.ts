@@ -67,14 +67,12 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
         /**
          *
-         * @private
          */
         this.PrepareList();
     }
 
     /**
      *
-     * @param changes
      */
     ngOnChanges(changes: SimpleChanges) {
         if (typeof changes['active'] !== 'undefined' && !changes['active'].firstChange) {
@@ -92,7 +90,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @param event
      */
     keyDown(event: KeyboardEvent) {
         event.stopImmediatePropagation();
@@ -149,7 +146,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @param event
      */
     OnMouseOver(event: MouseEvent) {
         // Mouse didn't actually move, so no logic needed.
@@ -168,7 +164,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     EmitSelected() {
         if(this.FindActive() > -1) {
@@ -178,7 +173,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     DropdownFocusAreaDown() {
         let scroll = this._eref.nativeElement.offsetHeight + this._eref.nativeElement.scrollTop;
@@ -193,7 +187,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     DropdownFocusAreaUp() {
         let scroll = this._eref.nativeElement.scrollTop;
@@ -212,7 +205,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @returns {boolean}
      */
     @HostBinding('class.open')
     get opened() {
@@ -226,7 +218,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     @HostListener('document:click', ['$event'])
     Close(event, force: boolean = false) {
@@ -261,7 +252,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     Open() {
         setTimeout(() => {
@@ -283,8 +273,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @returns {boolean}
-     * @constructor
      */
     RefExists() {
         return typeof this.input !== 'undefined';
@@ -292,7 +280,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @private
      */
     FindActive(): number {
         return this._list.reduce((result, item, index) => {
@@ -306,8 +293,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @param index
-     * @private
      */
     SetActive(index: number) {
         if (index > this._list.length - 1 || index < 0) return;
@@ -327,8 +312,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @param index
-     * @constructor
      */
     GetElement(index: number) {
         return this._eref.nativeElement.children[index];
@@ -336,7 +319,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @private
      */
     ClearActive(): void {
         this._list.forEach((item, index) => {
@@ -344,7 +326,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
             /**
              *
-             * @type {string}
              */
             this.GetElement(index).classList.remove('active');
         });
@@ -352,8 +333,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @returns {[{item: any, active: boolean}]}
-     * @constructor
      */
     PrepareList() {
         this._list = Object.keys(this.list).map((key) => {
@@ -371,9 +350,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @param item
-     * @returns {boolean}
-     * @constructor
      */
     ActiveItem(item: any) {
         return this.active !== null && item === this.active;
@@ -381,7 +357,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     DetermineActiveClass() {
         this._list.forEach((item, index) => {
@@ -401,7 +376,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
      */
     PrepareChildrenList() {
         const list = this._eref.nativeElement.children;
@@ -421,8 +395,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
 
     /**
      *
-     * @constructor
-     * @param object
      */
     DeReference(object: { active: boolean, [value: string]: any }) {
         const {item} = object;

@@ -1,34 +1,33 @@
 import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges, TemplateRef,
-  ViewChild,
-  ViewChildren
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
-import { AutocompleteGroup } from './classes/AutocompleteGroup';
-import { SelectedAutocompleteItem } from './classes/typing';
-import { CompleterComponent } from './completer/completer.component';
-import { GroupNoResult, ReturnStringArrayByID } from './utils/utils';
-import { Subject } from 'rxjs';
+import {AutocompleteGroup} from './classes/AutocompleteGroup';
+import {SelectedAutocompleteItem} from './classes/typing';
+import {CompleterComponent} from './completer/completer.component';
+import {GroupNoResult, ReturnStringArrayByID} from './utils/utils';
+import {Subject} from 'rxjs';
 
 @Component({
-    selector: 'ng-autocomplete',
+    selector: 'ng-auto-complete',
     template: `
         <div #init style="display: none;"><span class="after-view-init"></span></div>
         <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)"
                       (no-result)="NoResult($event)"
                       (selected)="ListenToSelected($event)"
                       [group]="item"></ng-completer>
-    `
+    `,
 })
-export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChanges {
+export class NgAutoCompleteComponent implements OnInit {
     @ViewChildren(CompleterComponent) public completers: QueryList<CompleterComponent>;
     @ViewChild('init') public init: ElementRef;
 
@@ -67,8 +66,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @constructor
-     * @param selected
      */
     ListenToSelected(selected: SelectedAutocompleteItem) {
         this.selected.emit(selected);
@@ -81,16 +78,13 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @constructor
-     * @param group
      */
     NoResult(group: GroupNoResult) {
-        this.noResult.emit(group)
+        this.noResult.emit(group);
     }
 
     /**
      *
-     * @constructor
      */
     InputCleared(key: string) {
         this.group.forEach((group) => {
@@ -102,13 +96,11 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
         /**
          * Items may have changed, need to te re-set list in completer components.
          */
-        this.TriggerChange()
+        this.TriggerChange();
     }
 
     /**
      *
-     * @param selected
-     * @constructor
      */
     SetChildren(selected: SelectedAutocompleteItem) {
         this.group.forEach((item) => {
@@ -128,17 +120,16 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
         /**
          * Items may have changed, need to te re-set list in completer components.
          */
-        this.TriggerChange()
+        this.TriggerChange();
     }
 
     /**
      *
-     * @constructor
      */
     TriggerChange() {
         this.completers.forEach((completer) => {
             completer.SetItems();
-        })
+        });
     }
 
     // =======================================================================//
@@ -147,9 +138,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param {string} key
-     * @returns {CompleterComponent}
-     * @constructor
      */
     GetInput(key: string): CompleterComponent {
         return this.completers.reduce((result, completer) => {
@@ -157,15 +145,12 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
                 result = completer;
             }
 
-            return result
+            return result;
         }, <CompleterComponent>{});
     }
 
     /**
      *
-     * @param {string} key
-     * @param {(completer: CompleterComponent) => void} f
-     * @constructor
      */
     SubscribeInput(key: string, f: (completer: CompleterComponent) => void) {
         if (this._viewHasBeenInit) {
@@ -190,9 +175,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param key
-     * @returns {CompleterComponent}
-     * @constructor
      */
     FindInput(key: string) {
         let s: Subject<CompleterComponent> = new Subject<CompleterComponent>();
@@ -214,8 +196,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param key
-     * @constructor
      */
     ResetInput(key: string) {
         this.SubscribeInput(
@@ -228,9 +208,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param key
-     * @param values
-     * @constructor
      */
     SetValues(key: string, values: { id?: string | number; [value: string]: any }[]) {
         this.SubscribeInput(
@@ -248,50 +225,40 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param {string} key
-     * @param {"noResults" | "selectedValue"} type
-     * @param {TemplateRef<any>} template
-     * @constructor
      */
     SetTemplate(key: string, type: 'noResults' | 'placeholderValue' | 'dropdownValue', template: TemplateRef<any>) {
         this.SubscribeInput(
             key,
             (completer) => {
-              completer.group[type] = template;
+                completer.group[type] = template;
 
-              /**
-               * Items may have changed, need to te re-set list in completer components.
-               */
-              this.TriggerChange();
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
             }
         );
     }
 
     /**
      *
-     * @param {string} key
-     * @param promise
-     * @constructor
      */
     SetAsync(key: string, promise: (str: string) => Promise<{ id: string | number; [value: string]: any }[]>) {
         this.SubscribeInput(
             key,
             (completer) => {
-              completer.group.async = promise;
+                completer.group.async = promise;
 
-              /**
-               * Items may have changed, need to te re-set list in completer components.
-               */
-              this.TriggerChange();
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
             }
         );
     }
 
     /**
      *
-     * @param key
-     * @param id
-     * @constructor
      */
     SelectItem(key: string, id: string | number) {
         this.SubscribeInput(
@@ -312,9 +279,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @param key
-     * @param ids
-     * @constructor
      */
     RemovableValues(key: string, ids: { id: string | number, [value: string]: any }[]) {
         this.SubscribeInput(
@@ -332,7 +296,6 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @constructor
      */
     ResetInputs() {
         this.group.forEach((item) => {
@@ -346,17 +309,16 @@ export class NgAutocompleteComponent implements OnInit, AfterViewChecked, OnChan
 
     /**
      *
-     * @constructor
      */
-    static FindCompleter(key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent {
-        const completer = list.filter((completer: NgAutocompleteComponent) => {
+    static FindCompleter(key: string, list: QueryList<NgAutoCompleteComponent>): NgAutoCompleteComponent {
+        const completer = list.filter((completer: NgAutoCompleteComponent) => {
             return key === completer.key;
         });
 
         if (typeof completer[0] !== 'undefined') {
-            return completer[0]
+            return completer[0];
         }
 
-        return null
+        return null;
     }
 }

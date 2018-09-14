@@ -76,14 +76,14 @@ export class AppModule {
 #### app.component.ts
 ```typescript
 import {Component, ViewChild} from "@angular/core";
-import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutocompleteComponent} from "ng-auto-complete";
+import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutoCompleteComponent} from "ng-auto-complete";
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
 })
 export class AppComponent {
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
     
     public group = [
         CreateNewAutocompleteGroup(
@@ -216,14 +216,14 @@ public group = [
 ```typescript
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutocompleteComponent} from "ng-auto-complete";
+import {CreateNewAutocompleteGroup, SelectedAutocompleteItem, NgAutoCompleteComponent} from "ng-auto-complete";
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
     
     public form: FormGroup;
     public group = [
@@ -268,6 +268,13 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [3.1.0]
+### Important. Breaking changes!
+- NgAutocompleteComponent renamed to NgAutoCompleteComponent
+- Very big changes internally. Stopped using rollup to create my npm package.
+    - Using angular libraries now instead.
+## [3.0.0] - 2018-09-14.
+- Updated to newest version of angular.
 ## [2.10.5] - 2018-06-07
 - Fixed an maximum callstack exceeded bug.
 ## [2.10.3] / [2.10.4] - 2018-06-06
@@ -286,7 +293,7 @@ export class AppComponent implements OnInit {
 - Support for async functions.
   - Useful for when you want to use your own API to return results.
   ```typescript
-  @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+  @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 
   const async = (str: string) => {
       return new Promise((resolve) => {
@@ -311,15 +318,13 @@ export class AppComponent implements OnInit {
 
   this.completer.SetAsync('completer', async);
   ```
-## [3.0.0] - 2018-09-14.
-- Updated to newest version of angular.
 ## [2.8.12] - 2018-05-09.
 ### New Functionality.
 - Created new functions to add custom ng-templates.
   - Every ng template receives a context that's equal to an AutocompleteItem type. Except for the dropdownValue, this receives a hightlight too. see example
   - template parameter must be of type: dropdownValue | placeholderValue | noResults
    ```typescript
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 
     @ViewChild('dropdownValue') dropdownValue: TemplateRef<any>;
     @ViewChild('placeholderValue') placeholderValue: TemplateRef<any>;
@@ -382,7 +387,7 @@ the dropdown its given height.
 - It's now possible to instantiate CreateNewAutocompleteGroup with an empty array and set its value later. This can be useful
 when you're waiting for an async task to complete.
      ```
-        const component = NgAutocompleteComponent.FindCompleter('completer', this.completers);
+        const component = NgAutoCompleteComponent.FindCompleter('completer', this.completers);
         component.SetValues(
             'late', // <-- NOTE: this is the key of the input. You can call this what you want.
             [
@@ -424,18 +429,18 @@ when you're waiting for an async task to complete.
 ## [1.1.1] - 2017-07-11.
 ### New Functionality.
 - SelectItem(key: string, id: string)
-    - NgAutocompleteComponent function - Set value manual, by id. This can be useful when the list is loaded
+    - NgAutoCompleteComponent function - Set value manual, by id. This can be useful when the list is loaded
     but there's a value set in the database. When the data is fetched from server, this method can be used.
     ```typescript
-      @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+      @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
       this.completer.SelectItem('completer', '1');
     ```
     ### Or if multiple completers in component.
     
     ```typescript
-      @ViewChildren(NgAutocompleteComponent) public completers: QueryList<NgAutocompleteComponent>;
+      @ViewChildren(NgAutoCompleteComponent) public completers: QueryList<NgAutoCompleteComponent>;
 
-      const completer = NgAutocompleteComponent.FindCompleter('group1', this.completers);
+      const completer = NgAutoCompleteComponent.FindCompleter('group1', this.completers);
       completer.SelectItem('completer', '1');
     ```
     
@@ -452,25 +457,25 @@ when you're waiting for an async task to complete.
 
 ### New Functionality.
 - <ng-autocomplete [key]="'group1'"></ng-autocomplete> - Added key on component.
-- static FindCompleter usage (NgAutocompleteComponent.FindCompleter()) (not to be confused with the old FindCompleter, now FindInput)
-    - (key: string, list: QueryList<NgAutocompleteComponent>): NgAutocompleteComponent. This can be useful when you have multiple ng-autocomplete components
+- static FindCompleter usage (NgAutoCompleteComponent.FindCompleter()) (not to be confused with the old FindCompleter, now FindInput)
+    - (key: string, list: QueryList<NgAutoCompleteComponent>): NgAutoCompleteComponent. This can be useful when you have multiple ng-autocomplete components
     in one component. Note that this  can only be used when the view has been init.
 
-# NgAutocompleteComponent Functions
+# NgAutoCompleteComponent Functions
 
 ### Note:
 
-<p>I have made all NgAutocompleteComponent and CompleterComponent functions public, so you could do a lot more than i'll show you<p>
+<p>I have made all NgAutoCompleteComponent and CompleterComponent functions public, so you could do a lot more than i'll show you<p>
 <p>I've documented the functions of which i think their useful:<p>
 
 ### Usage
 ```typescript
-@ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+@ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 ```
 
 | Function | Description |
 | :---         |     :---:      |
-| FindCompleter((key: string, list: QueryList<NgAutocompleteComponent>)) (Static function) | Finds completer |
+| FindCompleter((key: string, list: QueryList<NgAutoCompleteComponent>)) (Static function) | Finds completer |
 | ResetInputs()   | Resets all rendered completer inputs |
 | FindInput(key: string)     | Find completer input by assigned key |
 | RemovableValues(key: string, list: {id: string or number, [value: string]: any}[]) | Remove options from rendered list (by id) |
@@ -482,7 +487,7 @@ when you're waiting for an async task to complete.
 
 ### Usage
 ```typescript
-@ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+@ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 public input = this.completer.FindInput('completer');
 ```
 

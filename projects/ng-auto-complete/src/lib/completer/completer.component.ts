@@ -9,7 +9,7 @@ import {
 } from '../classes/AutocompleteItem';
 import {NgDropdownDirective} from '../dropdown/ng-dropdown.directive';
 import {GroupNoResult} from '../utils/utils';
-import {Subject} from 'rxjs/Rx';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'ng-completer',
@@ -151,7 +151,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      * Only used when completion is off.
-     * @constructor
      */
     RegisterClick() {
         if (!this.group.completion) {
@@ -161,7 +160,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     DropdownArray() {
         if (this.group.completion) {
@@ -171,7 +169,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     SwitchDropdownState() {
         if (this.dropdown._open) {
@@ -187,35 +184,30 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     CloseDropdown() {
         this.dropdown._open = false;
 
         /**
          *
-         * @type {string}
          */
         this._DOM.placeholder = null;
     }
 
     /**
      *
-     * @constructor
      */
     OpenDropdown() {
         this.dropdown.Open();
 
         /**
          *
-         * @type {string}
          */
         this._DOM.placeholder = null;
     }
 
     /**
      *
-     * @constructor
      */
     SetItems() {
         this._items = this.group.value;
@@ -224,7 +216,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     SelectItem(item: AutocompleteItem | string) {
         let i: AutocompleteItem;
@@ -245,9 +236,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @param {string} value
-     * @returns {Promise<void>}
-     * @constructor
      */
     async RunAsyncFunction(value: string) {
         this._completer = value;
@@ -279,8 +267,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @param value
-     * @constructor
      */
     OnModelChange(value: string) {
         this._completer = value;
@@ -299,7 +285,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     ClearModel() {
         this._DOM.selected = null;
@@ -310,7 +295,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     CompareItemsAndSet(value: string) {
         const obj = {};
@@ -330,7 +314,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     OnInputBlurred() {
         if (!this.HasChosenValue()) {
@@ -344,7 +327,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     OnHoverDropdownItem(item: AutocompleteItem | string) {
         if (typeof item == 'string') {
@@ -374,7 +356,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     HasChosenValue(): boolean {
         return this._DOM.selected !== null
@@ -382,9 +363,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @param {Object} obj
-     * @param {string} query
-     * @constructor
      */
     EmptySearch(obj: Object, query: string) {
         if (Object.keys(obj).length > 0) {
@@ -398,7 +376,6 @@ export class CompleterComponent implements OnInit {
 
     /**
      *
-     * @constructor
      */
     ClearValue() {
         this._completer = '';

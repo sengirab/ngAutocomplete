@@ -27,9 +27,6 @@ export class AutocompleteGroup {
 
     /**
      *
-     * @param value
-     * @param titleKey
-     * @constructor
      */
     SetNewValue(value: { id: string | number; [value: string]: any }[], titleKey: string) {
         const values = SearchableAutoCompleteItems(value, titleKey);
@@ -37,29 +34,24 @@ export class AutocompleteGroup {
 
         /**
          *
-         * @type {AutocompleteItem[]}
          */
         this.value = this.FilterRemovals(this.removals, values);
     }
 
     /**
      *
-     * @param ids
-     * @constructor
      */
     Removables(ids: string[]) {
         this.removals = ids;
 
         /**
          *
-         * @type {AutocompleteItem[]}
          */
         this.value = this.FilterRemovals(this.removals, this._copy);
     }
 
     /**
      *
-     * @constructor
      */
     InitialValue() {
         this.value = this.FilterRemovals(this.removals, this.initialValue);
@@ -72,7 +64,6 @@ export class AutocompleteGroup {
 
     /**
      *
-     * @constructor
      */
     SetCopy(values: { [value: string]: AutocompleteItem }) {
         this._copy = Object.assign([], values);
@@ -80,8 +71,6 @@ export class AutocompleteGroup {
 
     /**
      *
-     * @param value
-     * @constructor
      */
     SetValues(value: { id?: string | number; [value: string]: any }[]) {
         this.value = SearchableAutoCompleteItems(value, this.keys.titleKey, this.keys.childrenKey);
@@ -95,9 +84,6 @@ export class AutocompleteGroup {
 
     /**
      *
-     * @param {any[]} removals
-     * @param value
-     * @constructor
      */
     FilterRemovals(removals: any[], value: { [value: string]: AutocompleteItem }): { [value: string]: AutocompleteItem } {
         let filtered = Object.assign({}, value);
@@ -127,14 +113,6 @@ export class AutocompleteGroup {
 
 /**
  *
- * @param {string} placeholder
- * @param {string} key
- * @param value
- * @param keys
- * @param {string} parent
- * @param {boolean} completion
- * @returns {AutocompleteGroup}
- * @constructor
  */
 export function CreateNewAutocompleteGroup<T>(placeholder: string, key: string, value: { id?: string | number; [value: string]: any }[], keys: { titleKey: string, childrenKey: string | null }, parent: string = '', completion: boolean = true, searchLength: number = 2): AutocompleteGroup {
     const group = new AutocompleteGroup();

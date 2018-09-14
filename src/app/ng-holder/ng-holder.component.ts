@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CreateNewAutocompleteGroup } from '../ng-autocomplete/classes/AutocompleteGroup';
-import { NgAutocompleteComponent } from '../ng-autocomplete/ng-autocomplete.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {CreateNewAutocompleteGroup, NgAutoCompleteComponent} from 'ng-auto-complete';
 
 @Component({
     selector: 'app-ng-holder',
     templateUrl: './ng-holder.component.html'
 })
 export class NgHolderComponent implements OnInit {
-    @ViewChild(NgAutocompleteComponent) public completer: NgAutocompleteComponent;
+    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
 
     public group = [
         CreateNewAutocompleteGroup(
@@ -33,7 +32,7 @@ export class NgHolderComponent implements OnInit {
      *
      */
     ngOnInit() {
-        this.completer.SelectItem('group', 5)
+        this.completer.SelectItem('group', 5);
     }
 
     /**
