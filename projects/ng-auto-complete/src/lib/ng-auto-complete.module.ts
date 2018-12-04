@@ -4,24 +4,22 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {CompleterComponent} from './completer/completer.component';
 import {NgDropdownDirective} from './dropdown/ng-dropdown.directive';
-import {HighlightPipe} from './pipes/highlight';
-import {KeyValuePipe} from './pipes/key-value';
+import {PipeModule} from './pipes/pipes.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        PipeModule.forRoot()
     ],
     exports: [
         NgAutoCompleteComponent,
-        CompleterComponent
+        CompleterComponent,
     ],
     declarations: [
         NgAutoCompleteComponent,
         CompleterComponent,
-        NgDropdownDirective,
-        HighlightPipe,
-        KeyValuePipe
+        NgDropdownDirective
     ]
 })
 export class NgAutoCompleteModule {
