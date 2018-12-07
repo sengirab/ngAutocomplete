@@ -137,7 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit {
      */
     FillArray() {
         let arr = [];
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 20; i++) {
             arr.push({title: `Option ${i} Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, id: i});
         }
 
@@ -180,6 +180,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         };
 
         // this.completer.SetAsync('items1', async);
+
+        this.completer.SelectItem('items1', '5');
 
         this.completer.SetTemplate('items1', 'dropdownValue', this.dropdownValue);
         this.completer.SetTemplate('items1', 'noResults', this.noResults);

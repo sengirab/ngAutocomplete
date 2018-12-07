@@ -268,6 +268,14 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [4.1.2]
+- Internal changes
+    - The way how the first value was selected is changed. Package used to wait until view was checked, this was checked
+    periodically via a interval. Now a subject has been created to emit this value to all their subscribers.
+- BREAKING:
+    - `FindInput` function has been removed.
+## [4.0.2] - - [4.0.1] - [4.0.0]
+- Updates regarding angular 7
 ## [3.1.0]
 ### Important. Breaking changes!
 - NgAutocompleteComponent renamed to NgAutoCompleteComponent

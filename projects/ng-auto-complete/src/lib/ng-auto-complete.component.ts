@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -39,8 +40,9 @@ export class NgAutoCompleteComponent implements OnInit {
     @Input() public classes: string[] = [];
 
     _viewHasBeenInit: boolean = false;
+    _viewInitSubject: Subject<boolean> = new Subject<boolean>();
 
-    constructor() {
+    constructor(private cdr: ChangeDetectorRef) {
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -57,10 +59,13 @@ export class NgAutoCompleteComponent implements OnInit {
      *
      */
     ngAfterViewChecked() {
-        let el = this.init.nativeElement.querySelector('.after-view-init');
+        if (!this._viewHasBeenInit) {
+            let el = this.init.nativeElement.querySelector('.after-view-init');
 
-        if (window.getComputedStyle(el).length > 0) {
-            this._viewHasBeenInit = true;
+            if (window.getComputedStyle(el).length > 0) {
+                this._viewHasBeenInit = true;
+                this._viewInitSubject.next(true);
+            }
         }
     }
 
@@ -163,35 +168,13 @@ export class NgAutoCompleteComponent implements OnInit {
             return;
         }
 
-        let s = this.FindInput(key).subscribe((completer) => {
+        this._viewInitSubject.subscribe((_bool) => {
+            let completer = this.GetInput(key);
             f(completer);
+            this.cdr.detectChanges();
 
-            /**
-             *
-             */
-            s.unsubscribe();
+            this._viewInitSubject.unsubscribe();
         });
-    }
-
-    /**
-     *
-     */
-    FindInput(key: string) {
-        let s: Subject<CompleterComponent> = new Subject<CompleterComponent>();
-
-        let i = setInterval(() => {
-            if (this._viewHasBeenInit) {
-                s.next(this.GetInput(key));
-                s.complete();
-
-                /**
-                 *
-                 */
-                clearInterval(i);
-            }
-        }, 1000);
-
-        return s;
     }
 
     /**
