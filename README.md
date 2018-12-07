@@ -274,7 +274,7 @@ export class AppComponent implements OnInit {
     periodically via a interval. Now a subject has been created to emit this value to all their subscribers.
 - BREAKING:
     - `FindInput` function has been removed.
-## [4.0.2] - - [4.0.1] - [4.0.0]
+## [4.0.2] - [4.0.1] - [4.0.0]
 - Updates regarding angular 7
 ## [3.1.0]
 ### Important. Breaking changes!
