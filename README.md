@@ -268,6 +268,10 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [4.1.4]
+- ExpressionChangedAfterItHasBeenCheckedError
+    - Fixed this error in a previous version, this ends up in propagating the error, this isn't user friendly.
+    - Since i must check something in the `ngAfterViewChecked` there is no escaping this error unless setTimeout is used (which i did now).
 ## [4.1.2]
 - Internal changes
     - The way how the first value was selected is changed. Package used to wait until view was checked, this was checked

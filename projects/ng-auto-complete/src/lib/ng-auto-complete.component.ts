@@ -170,8 +170,9 @@ export class NgAutoCompleteComponent implements OnInit {
 
         this._viewInitSubject.subscribe((_bool) => {
             let completer = this.GetInput(key);
-            f(completer);
-            this.cdr.detectChanges();
+            setTimeout(() => {
+                f(completer);
+            });
 
             this._viewInitSubject.unsubscribe();
         });
