@@ -25,6 +25,7 @@ import {Subject} from 'rxjs';
         <ng-completer [ngClass]="classes" *ngFor="let item of group" (cleared)="InputCleared($event)"
                       (no-result)="NoResult($event)"
                       (selected)="ListenToSelected($event)"
+                      [disabled]="disabled"
                       [group]="item"></ng-completer>
     `,
 })
@@ -38,6 +39,7 @@ export class NgAutoCompleteComponent implements OnInit {
     @Input() public group: AutocompleteGroup[] = [];
     @Input() public key: string = '';
     @Input() public classes: string[] = [];
+    @Input() disabled = false;
 
     _viewHasBeenInit: boolean = false;
     _viewInitSubject: Subject<boolean> = new Subject<boolean>();

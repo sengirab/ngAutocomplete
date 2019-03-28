@@ -32,6 +32,7 @@ import {Subject} from 'rxjs';
                 </span>
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
                        (ngModelChange)="_change.next($event);"
+                       [tabIndex]="disabled ? -1 : false"
                        [value]="_completer"
                        autocomplete="off"
                        (click)="OpenDropdown()"
@@ -109,6 +110,7 @@ export class CompleterComponent implements OnInit {
     @Output('no-result') public noResult: EventEmitter<GroupNoResult> = new EventEmitter<GroupNoResult>();
 
     @Input() public group: AutocompleteGroup = <AutocompleteGroup>{};
+    @Input() disabled = false;
 
     _change: Subject<string> = new Subject<string>();
     _items: { [value: string]: AutocompleteItem } = {};
