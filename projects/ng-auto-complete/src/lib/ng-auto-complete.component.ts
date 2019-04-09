@@ -244,6 +244,40 @@ export class NgAutoCompleteComponent implements OnInit {
     /**
      *
      */
+    SetEnable(key: string) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer._disabled = false;
+
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    SetDisable(key: string) {
+        this.SubscribeInput(
+            key,
+            (completer) => {
+                completer._disabled = true;
+
+                /**
+                 * Items may have changed, need to te re-set list in completer components.
+                 */
+                this.TriggerChange();
+            }
+        );
+    }
+
+    /**
+     *
+     */
     SelectItem(key: string, id: string | number) {
         this.SubscribeInput(
             key,
