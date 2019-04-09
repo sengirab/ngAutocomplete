@@ -33,6 +33,7 @@ import {Subject} from 'rxjs';
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
                        (ngModelChange)="_change.next($event);"
                        [value]="_completer"
+                       [tabIndex]="_disabled ? -1 : 0"
                        autocomplete="off"
                        (click)="OpenDropdown()"
                        (focus)="OpenDropdown()" class="ng-autocomplete-input">
@@ -114,6 +115,7 @@ export class CompleterComponent implements OnInit {
     _items: { [value: string]: AutocompleteItem } = {};
     _completer: string = '';
     _highlight: string = '';
+    _disabled: boolean = false;
 
     _DOM = {
         notFound: <boolean>false,
