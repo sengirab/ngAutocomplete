@@ -1,15 +1,15 @@
-import {debounceTime} from 'rxjs/operators';
-import {Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from '@angular/core';
-import {AutocompleteGroup} from '../classes/AutocompleteGroup';
+import { debounceTime } from 'rxjs/operators';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { AutocompleteGroup } from '../classes/AutocompleteGroup';
 import {
     AutocompleteItem,
     ComparableAutoCompleteString,
     SearchableAutoCompleteString,
     StrippedAutocompleteGroup
 } from '../classes/AutocompleteItem';
-import {NgDropdownDirective} from '../dropdown/ng-dropdown.directive';
-import {GroupNoResult} from '../utils/utils';
-import {Subject} from 'rxjs';
+import { NgDropdownDirective } from '../dropdown/ng-dropdown.directive';
+import { GroupNoResult } from '../utils/utils';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ng-completer',
@@ -31,11 +31,10 @@ import {Subject} from 'rxjs';
                   </ng-template>
                 </span>
                 <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
-                       (ngModelChange)="_change.next($event);"
+                       (change)="_change.next(_completer);"
                        [value]="_completer"
                        [tabIndex]="_disabled ? -1 : 0"
                        autocomplete="off"
-                       (click)="OpenDropdown()"
                        (focus)="OpenDropdown()" class="ng-autocomplete-input">
 
                 <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
@@ -71,6 +70,13 @@ import {Subject} from 'rxjs';
     styles: [`
         .ng-autocomplete-inputs {
             position: relative;
+        }
+
+        .ng-autocomplete-inputs input[type=text]::-ms-clear,
+        .ng-autocomplete-inputs input[type=text]::-ms-reveal {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         .ng-autocomplete-inputs.completion-off {
@@ -142,7 +148,7 @@ export class CompleterComponent implements OnInit {
                         if (this.group.async !== null) {
                             this.RunAsyncFunction(value);
                         } else {
-                            this.OnModelChange(value)
+                            this.OnModelChange(value);
                         }
                     });
                 });
@@ -156,7 +162,7 @@ export class CompleterComponent implements OnInit {
      */
     RegisterClick() {
         if (!this.group.completion) {
-            this.SwitchDropdownState()
+            this.SwitchDropdownState();
         }
     }
 
@@ -165,7 +171,7 @@ export class CompleterComponent implements OnInit {
      */
     DropdownArray() {
         if (this.group.completion) {
-            this.SwitchDropdownState()
+            this.SwitchDropdownState();
         }
     }
 
@@ -181,7 +187,7 @@ export class CompleterComponent implements OnInit {
         /**
          *
          */
-        this.OpenDropdown()
+        this.OpenDropdown();
     }
 
     /**
@@ -249,7 +255,7 @@ export class CompleterComponent implements OnInit {
             this.group.InitialValue();
             this.ClearModel();
 
-            this.dropdown.Close('', true)
+            this.dropdown.Close('', true);
         } else if (value.length > this.group.searchLength) {
             this._DOM.isLoading = true;
 
@@ -279,7 +285,7 @@ export class CompleterComponent implements OnInit {
         if (value.length === 0) {
             this.ClearModel();
 
-            this.dropdown.Close('', true)
+            this.dropdown.Close('', true);
         } else if (value.length > this.group.searchLength) {
             this.CompareItemsAndSet(value);
         }
@@ -302,7 +308,7 @@ export class CompleterComponent implements OnInit {
         const obj = {};
         for (let key in this.group.value) {
             if (ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
-                obj[key] = this.group.value[key]
+                obj[key] = this.group.value[key];
             }
         }
 
@@ -360,7 +366,7 @@ export class CompleterComponent implements OnInit {
      *
      */
     HasChosenValue(): boolean {
-        return this._DOM.selected !== null
+        return this._DOM.selected !== null;
     }
 
     /**
@@ -369,11 +375,11 @@ export class CompleterComponent implements OnInit {
     EmptySearch(obj: Object, query: string) {
         if (Object.keys(obj).length > 0) {
             this._DOM.notFound = false;
-            return
+            return;
         }
 
         this._DOM.notFound = true;
-        this.noResult.emit({group: {key: this.group.key}, query: query})
+        this.noResult.emit({group: {key: this.group.key}, query: query});
     }
 
     /**
