@@ -144,7 +144,6 @@ export class CompleterComponent implements OnInit {
             this._change.pipe(
                 debounceTime(300))
                 .subscribe((value: string) => {
-                    console.log(value);
                     this._zone.run(() => {
                         if (this.group.async !== null) {
                             this.RunAsyncFunction(value);
