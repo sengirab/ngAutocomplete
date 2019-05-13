@@ -30,8 +30,8 @@ import { Subject } from 'rxjs';
                       {{_DOM.placeholder.title}}
                   </ng-template>
                 </span>
-                <input #input type="text" [placeholder]="group.placeholder" name="completer" [(ngModel)]="_completer"
-                       (change)="_change.next(_completer);"
+                <input #input type="text" [placeholder]="group.placeholder" name="completer" [ngModel]="_completer"
+                       (ngModelChange)="_change.next($event);"
                        [value]="_completer"
                        [tabIndex]="_disabled ? -1 : 0"
                        autocomplete="off"
@@ -284,8 +284,6 @@ export class CompleterComponent implements OnInit {
 
         if (value.length === 0) {
             this.ClearModel();
-
-            this.dropdown.Close('', true);
         } else if (value.length > this.group.searchLength) {
             this.CompareItemsAndSet(value);
         }
