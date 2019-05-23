@@ -56,8 +56,7 @@ import { Subject } from 'rxjs';
                 </div>
 
                 <div class="dropdown-item" *ngFor="let item of _items | keys; let i = index"
-                     (click)="SelectItem(_items[item])">
-
+                     (click)="SelectItem(_items[item])" [ngClass]="_items[item].className">
                     <ng-container *ngIf="group.dropdownValue">
                         <ng-template
                             *ngTemplateOutlet="group.dropdownValue; context: {$implicit: _items[item], highlight: _items[item].title | highlight:_highlight}"></ng-template>
@@ -259,7 +258,7 @@ export class CompleterComponent implements OnInit {
         } else if (value.length > this.group.searchLength) {
             this._DOM.isLoading = true;
 
-            let values = await this.group.async(value);
+            const values = await this.group.async(value);
             this.group.SetNewValue(values, this.group.keys.titleKey);
 
             this._DOM.isLoading = false;
@@ -304,7 +303,7 @@ export class CompleterComponent implements OnInit {
      */
     CompareItemsAndSet(value: string) {
         const obj = {};
-        for (let key in this.group.value) {
+        for (const key in this.group.value) {
             if (ComparableAutoCompleteString(key).toLowerCase().indexOf(value.toLowerCase()) > -1) {
                 obj[key] = this.group.value[key];
             }
@@ -335,7 +334,7 @@ export class CompleterComponent implements OnInit {
      *
      */
     OnHoverDropdownItem(item: AutocompleteItem | string) {
-        if (typeof item == 'string') {
+        if (typeof item === 'string') {
             this._DOM.placeholder = this._items[item];
             return;
         }
