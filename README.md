@@ -268,6 +268,14 @@ export class AppComponent implements OnInit {
 ```
 
 # Changelog - (Read before updating.)
+## [4.1.9]
+- Internal fixes & performance improvements.
+## [4.1.6]
+- I.E fixes
+## [4.1.5]
+- New functions
+    - SetEnable(key: string)
+    - SetDisable(key: string)
 ## [4.1.4]
 - ExpressionChangedAfterItHasBeenCheckedError
     - Fixed this error in a previous version, this ends up in propagating the error, this isn't user friendly.

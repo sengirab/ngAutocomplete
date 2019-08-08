@@ -10,8 +10,8 @@ import {
     OnInit,
     Output,
     SimpleChanges
-} from "@angular/core";
-import {IsMobileOrTablet} from "../utils/utils";
+} from '@angular/core';
+import {IsMobileOrTablet} from '../utils/utils';
 
 @Directive({
     selector: '[ngDropdown]'
@@ -20,7 +20,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     @Input() public list: any[] = [];
     @Input() public active: any = null;
 
-    @Input() public input: Element = null;
+    @Input() public input: HTMLElement = null;
     @Input() public element: Element = null;
 
     @Input() public key: string = '';
@@ -33,7 +33,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     _open: boolean = false;
     _list: { active: boolean, [value: string]: any }[] = [];
     _class: string = '';
-    wheelHandler: any;
 
     constructor(public _eref: ElementRef) {
     }
@@ -44,25 +43,8 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this._class = `dr-item-${this.key}-`;
 
-        if (this.RefExists()) {
-            this.input.addEventListener('keydown', (event: KeyboardEvent) => {
-                this.keyDown(event);
-            });
-        }
-
-        if(!this.completion) {
-            document.addEventListener('keydown', (event: KeyboardEvent) => {
-                if(this._open) {
-                    this.keyDown(event);
-                }
-            });
-        }
-
-        if(!IsMobileOrTablet()) {
-            this._eref.nativeElement.addEventListener('mouseover', (event: MouseEvent) => {
-                this.OnMouseOver(event);
-            });
-
+        if (!IsMobileOrTablet()) {
+            this._eref.nativeElement.addEventListener('mouseover', this.mouseoverListenerBind);
         }
 
         /**
@@ -125,15 +107,23 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                 this.EmitSelected();
                 this.Close(null, true);
 
+                if (this.RefExists()) {
+                    this.input.blur();
+                }
+
                 event.preventDefault();
                 break;
             case 'Escape':
                 this.Close(null, true);
 
+                if (this.RefExists()) {
+                    this.input.blur();
+                }
+
                 event.preventDefault();
                 break;
             case 'Tab':
-                if(!event.shiftKey) {
+                if (!event.shiftKey) {
                     this.EmitSelected();
                 }
 
@@ -149,7 +139,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     OnMouseOver(event: MouseEvent) {
         // Mouse didn't actually move, so no logic needed.
-        if(event.movementX == 0 && event.movementY == 0) {
+        if (event.movementX == 0 && event.movementY == 0) {
             return
         }
 
@@ -166,7 +156,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      */
     EmitSelected() {
-        if(this.FindActive() > -1) {
+        if (this.FindActive() > -1) {
             this.selected.emit(this._list[this.FindActive()].key);
         }
     }
@@ -180,7 +170,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         /**
          *
          */
-        if((this.GetElement(this.FindActive()).offsetTop + this.GetElement(this.FindActive()).offsetHeight) > scroll) {
+        if ((this.GetElement(this.FindActive()).offsetTop + this.GetElement(this.FindActive()).offsetHeight) > scroll) {
             this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop - (this._eref.nativeElement.offsetHeight - this.GetElement(this.FindActive()).offsetHeight)
         }
     }
@@ -194,7 +184,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         /**
          *
          */
-        if(this.GetElement(this.FindActive()).offsetTop < scroll && scroll > 0) {
+        if (this.GetElement(this.FindActive()).offsetTop < scroll && scroll > 0) {
             this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop;
         }
     }
@@ -221,7 +211,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     @HostListener('document:click', ['$event'])
     Close(event, force: boolean = false) {
-        if(!this._open) {
+        if (!this._open) {
             return;
         }
 
@@ -231,6 +221,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             /**
              * Emit NULL so listening components know what to do.
              */
+            this.RemoveListeners();
             this.ClearActive();
             this.hover.emit(null);
             this.closed.emit();
@@ -246,6 +237,33 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    /**
+     *
+     */
+    private inputKeydown(event: KeyboardEvent) {
+        this.keyDown(event);
+    }
+
+    private inputKeydownBind = this.inputKeydown.bind(this);
+
+    /**
+     *
+     */
+    private documentKeydown(event: KeyboardEvent) {
+        this.keyDown(event);
+    }
+
+    private documentKeydownBind = this.documentKeydown.bind(this);
+
+    /**
+     *
+     */
+    private mouseoverListener(event: MouseEvent) {
+        this.OnMouseOver(event);
+    }
+
+    private mouseoverListenerBind = this.mouseoverListener.bind(this);
+
     // =======================================================================//
     // ! Utils                                                                //
     // =======================================================================//
@@ -253,9 +271,41 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     /**
      *
      */
+    RegisterListeners() {
+        if (this.RefExists()) {
+            this.input.addEventListener('keydown', this.inputKeydownBind);
+        }
+
+        if (!this.completion) {
+            document.addEventListener('keydown', this.documentKeydownBind);
+        }
+    }
+
+    /**
+     *
+     */
+    RemoveListeners() {
+        if (this.RefExists()) {
+            this.input.removeEventListener('keydown', this.inputKeydownBind);
+        }
+
+        if (!this.completion) {
+            document.removeEventListener('keydown', this.documentKeydownBind);
+        }
+
+        if (!IsMobileOrTablet()) {
+            this._eref.nativeElement.removeEventListener('mouseover', this.mouseoverListenerBind);
+        }
+    }
+
+    /**
+     *
+     */
     Open() {
         setTimeout(() => {
             if (!this._open && !this._eref.nativeElement.classList.contains('is-initial-empty')) {
+                this.RegisterListeners();
+
                 this._open = true;
                 this.PrepareList();
 
@@ -409,23 +459,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      */
     ngOnDestroy() {
-        if (this.RefExists()) {
-            this.wheelHandler = this.removeEventListner.bind(this.input);
-            // this.input.removeEventListener('keydown');
-        }
-
-        if(!this.completion) {
-            this.wheelHandler = this.removeEventListner.bind(document);
-            // document.removeEventListener('keydown');
-        }
-
-        if(!IsMobileOrTablet()) {
-            this.wheelHandler = this.removeEventListner.bind(this._eref);
-            // this._eref.nativeElement.removeEventListener('mouseover');
-        }
-    }
-
-    removeEventListner(elem: Element) {
-        elem.removeEventListener('wheel', this.wheelHandler, true);
+        this.RemoveListeners();
     }
 }
