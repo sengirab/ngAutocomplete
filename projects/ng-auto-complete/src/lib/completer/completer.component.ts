@@ -34,7 +34,7 @@ import { Subject } from 'rxjs';
                        (ngModelChange)="_change.next($event);"
                        [value]="_completer"
                        [tabIndex]="_disabled ? -1 : 0"
-                       autocomplete="off"
+                       autocomplete="new-password"
                        (focus)="OpenDropdown()" class="ng-autocomplete-input">
 
                 <span [ngClass]="{'open': dropdown._open}" class="ng-autocomplete-dropdown-icon"
