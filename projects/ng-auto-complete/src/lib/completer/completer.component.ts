@@ -1,5 +1,5 @@
 import { debounceTime } from 'rxjs/operators';
-import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AutocompleteGroup } from '../classes/AutocompleteGroup';
 import {
     AutocompleteItem,
@@ -105,7 +105,8 @@ import { Subject } from 'rxjs';
         .ng-autocomplete-dropdown .ng-dropdown.open {
             display: block;
         }
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompleterComponent implements OnInit {
     @ViewChild(NgDropdownDirective) public dropdown: NgDropdownDirective;
