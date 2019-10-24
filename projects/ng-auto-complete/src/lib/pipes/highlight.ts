@@ -1,20 +1,46 @@
-import {Pipe, PipeTransform} from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'highlight'
 })
 export class HighlightPipe implements PipeTransform {
+
     transform(text: string, search: string): string {
-        if (typeof search === 'undefined') {
-            return text
+        if (search.length > 0) {
+            return this.Strip(text).replace(new RegExp(`${this.EscapeMatch(search)}`, 'gi'), (match: string) => {
+                return `<span class="dropdown-item-highlight">${match}</span>`;
+            });
+        } else {
+            return text;
         }
+    }
 
-        let pattern = search.replace(/[\-\[\]\/{}()*+?.\\^$|]/g, '\\$&');
-        pattern = pattern.split(' ').filter((t) => t.length > 0).join('|');
+    EscapeMatch(match: string) {
+        const entityMap = {
+            '&': '\\&',
+            '<': '\\<',
+            '>': '\\>',
+            '/': '\\/',
+            '=': '\\=',
+            '+': '\\+',
+            '-': '\\-',
+            '#': '\\#',
+            '!': '\\!',
+            '@': '\\@',
+            '$': '\\$',
+            '%': '\\%',
+            '^': '\\^',
+            '*': '\\*',
+            '(': '\\(',
+            ')': '\\)',
+        };
 
-        /**
-         *
-         */
-        return text.replace(new RegExp(pattern, 'gi'), (match) => `<span class="dropdown-item-highlight">${match}</span>`);
+        return String(match).replace(/[&<>"'`=+\/]/g, function (s) {
+            return entityMap[s];
+        });
+    }
+
+    Strip(str_in: String = '') {
+        return str_in.replace(/<[^>]*>/g, '');
     }
 }
