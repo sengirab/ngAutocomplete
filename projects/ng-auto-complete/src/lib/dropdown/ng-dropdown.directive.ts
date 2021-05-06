@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -23,18 +24,22 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
     @Input() public input: HTMLElement = null;
     @Input() public element: Element = null;
 
-    @Input() public key: string = '';
-    @Input() public completion: boolean = true;
+    @Input() public key  = '';
+    @Input() public completion  = true;
 
     @Output() public hover: EventEmitter<any> = new EventEmitter<any>();
     @Output() public selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() public closed: EventEmitter<any> = new EventEmitter<any>();
 
-    _open: boolean = false;
+    _open  = false;
     _list: { active: boolean, [value: string]: any }[] = [];
-    _class: string = '';
+    _class  = '';
 
-    constructor(public _eref: ElementRef) {
+    private inputKeydownBind = this.inputKeydown.bind(this);
+    private mouseoverListenerBind = this.mouseoverListener.bind(this);
+    private documentKeydownBind = this.documentKeydown.bind(this);
+
+    constructor(public _eref: ElementRef, private cdr: ChangeDetectorRef) {
     }
 
     /**
@@ -139,8 +144,8 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      */
     OnMouseOver(event: MouseEvent) {
         // Mouse didn't actually move, so no logic needed.
-        if (event.movementX == 0 && event.movementY == 0) {
-            return
+        if (event.movementX === 0 && event.movementY === 0) {
+            return;
         }
 
         /**
@@ -165,13 +170,14 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      */
     DropdownFocusAreaDown() {
-        let scroll = this._eref.nativeElement.offsetHeight + this._eref.nativeElement.scrollTop;
+        const scroll = this._eref.nativeElement.offsetHeight + this._eref.nativeElement.scrollTop;
 
         /**
          *
          */
         if ((this.GetElement(this.FindActive()).offsetTop + this.GetElement(this.FindActive()).offsetHeight) > scroll) {
-            this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop - (this._eref.nativeElement.offsetHeight - this.GetElement(this.FindActive()).offsetHeight)
+            // tslint:disable-next-line:max-line-length
+            this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetTop - (this._eref.nativeElement.offsetHeight - this.GetElement(this.FindActive()).offsetHeight);
         }
     }
 
@@ -179,7 +185,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      */
     DropdownFocusAreaUp() {
-        let scroll = this._eref.nativeElement.scrollTop;
+        const scroll = this._eref.nativeElement.scrollTop;
 
         /**
          *
@@ -225,6 +231,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             this.ClearActive();
             this.hover.emit(null);
             this.closed.emit();
+            this.cdr.detectChanges();
         };
 
         if (force) {
@@ -244,7 +251,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this.keyDown(event);
     }
 
-    private inputKeydownBind = this.inputKeydown.bind(this);
 
     /**
      *
@@ -253,7 +259,6 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this.keyDown(event);
     }
 
-    private documentKeydownBind = this.documentKeydown.bind(this);
 
     /**
      *
@@ -262,7 +267,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
         this.OnMouseOver(event);
     }
 
-    private mouseoverListenerBind = this.mouseoverListener.bind(this);
+
 
     // =======================================================================//
     // ! Utils                                                                //
@@ -317,6 +322,8 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
                 } else {
                     this._eref.nativeElement.scrollTop = this.GetElement(this.FindActive()).offsetHeight * this.FindActive();
                 }
+
+                this.cdr.detectChanges();
             }
         }, 0);
     }
@@ -345,7 +352,9 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
      *
      */
     SetActive(index: number) {
-        if (index > this._list.length - 1 || index < 0) return;
+        if (index > this._list.length - 1 || index < 0) {
+            return;
+        }
 
         /**
          *
@@ -389,7 +398,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
             return {
                 key,
                 active: this.ActiveItem(key)
-            }
+            };
         });
 
         /**
@@ -418,10 +427,10 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
              *
              */
             this.GetElement(index).classList.remove('active');
-            if (item.active)
+            if (item.active) {
                 this.GetElement(index).classList.add('active');
-        })
-
+            }
+        });
     }
 
     /**
@@ -441,7 +450,7 @@ export class NgDropdownDirective implements OnChanges, OnInit, OnDestroy {
          */
         this.DetermineActiveClass();
 
-    };
+    }
 
     /**
      *

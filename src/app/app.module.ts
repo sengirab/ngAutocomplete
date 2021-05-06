@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 
 import {AppComponent} from './app.component';
 import {NgAutoCompleteModule} from 'ng-auto-complete';
@@ -10,6 +9,7 @@ import {NgHolderComponent} from './ng-holder/ng-holder.component';
 import {AppRoutingModule} from './app-routing.module';
 import {Route1Component} from './routes/route1/route1.component';
 import {Route2Component} from './routes/route2/route2.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -22,12 +22,12 @@ import {Route2Component} from './routes/route2/route2.component';
     imports: [
         BrowserModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
         NgAutoCompleteModule,
         ReactiveFormsModule,
         AppRoutingModule
     ],
-    providers: [],
+    providers: [HttpClient],
     bootstrap: [AppComponent]
 })
 export class AppModule {
