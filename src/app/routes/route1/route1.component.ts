@@ -8,7 +8,7 @@ import {CreateNewAutocompleteGroup, GroupNoResult, NgAutoCompleteComponent, Sele
 })
 export class Route1Component implements OnInit, AfterViewInit {
     // @ViewChildren(NgAutoCompleteComponent) public completers: QueryList<NgAutoCompleteComponent>;
-    @ViewChild(NgAutoCompleteComponent) public completer: NgAutoCompleteComponent;
+    @ViewChild(NgAutoCompleteComponent, { static: true }) public completer: NgAutoCompleteComponent;
 
     @ViewChild('placeholderValue') placeholderValue: TemplateRef<any>;
     @ViewChild('dropdownValue') dropdownValue: TemplateRef<any>;
@@ -107,7 +107,7 @@ export class Route1Component implements OnInit, AfterViewInit {
         CreateNewAutocompleteGroup(
             'Search / choose in / from list',
             'items1',
-            this.FillArray(),
+            [],
             {titleKey: 'title', childrenKey: null},
             '',
             true,

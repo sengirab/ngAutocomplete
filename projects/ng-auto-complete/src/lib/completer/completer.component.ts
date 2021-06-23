@@ -1,5 +1,15 @@
 import { debounceTime } from 'rxjs/operators';
-import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnInit,
+    Output,
+    ViewChild,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef
+} from '@angular/core';
 import { AutocompleteGroup } from '../classes/AutocompleteGroup';
 import {
     AutocompleteItem,
@@ -109,19 +119,20 @@ import { Subject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompleterComponent implements OnInit {
-    @ViewChild(NgDropdownDirective) public dropdown: NgDropdownDirective;
+    @ViewChild(NgDropdownDirective, { static: true }) public dropdown: NgDropdownDirective;
 
     @Output() public cleared: EventEmitter<string> = new EventEmitter<string>();
     @Output() public selected: EventEmitter<StrippedAutocompleteGroup> = new EventEmitter<StrippedAutocompleteGroup>();
+    // tslint:disable-next-line:no-output-rename
     @Output('no-result') public noResult: EventEmitter<GroupNoResult> = new EventEmitter<GroupNoResult>();
 
     @Input() public group: AutocompleteGroup = <AutocompleteGroup>{};
 
     _change: Subject<string> = new Subject<string>();
     _items: { [value: string]: AutocompleteItem } = {};
-    _completer: string = '';
-    _highlight: string = '';
-    _disabled: boolean = false;
+    _completer  = '';
+    _highlight  = '';
+    _disabled   = false;
 
     _DOM = {
         notFound: <boolean>false,
@@ -132,7 +143,7 @@ export class CompleterComponent implements OnInit {
 
     };
 
-    constructor(private _zone: NgZone) {
+    constructor(private _zone: NgZone, private cdr: ChangeDetectorRef) {
     }
 
     /**
@@ -270,6 +281,7 @@ export class CompleterComponent implements OnInit {
             // User has typed something now, results could be shown. We need to remove the "is-initial-empty" class.
             this.IsInitialEmpty();
             this.dropdown.Open();
+            this.cdr.detectChanges();
         }
     }
 
