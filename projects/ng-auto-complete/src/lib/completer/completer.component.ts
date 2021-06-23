@@ -1,14 +1,14 @@
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
     NgZone,
     OnInit,
     Output,
-    ViewChild,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef
+    ViewChild
 } from '@angular/core';
 import { AutocompleteGroup } from '../classes/AutocompleteGroup';
 import {
@@ -19,11 +19,11 @@ import {
 } from '../classes/AutocompleteItem';
 import { NgDropdownDirective } from '../dropdown/ng-dropdown.directive';
 import { GroupNoResult } from '../utils/utils';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 @Component({
-    selector: 'ng-completer',
-    template: `
+    selector       : 'ng-completer',
+    template       : `
         <div #element class="ng-autocomplete-dropdown"
              [ngClass]="{'open': dropdown._open, 'is-loading': _DOM.isLoading, 'is-async': group.async !== null}">
 
@@ -116,32 +116,33 @@ import { Subject } from 'rxjs';
             display: block;
         }
     `],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompleterComponent implements OnInit {
     @ViewChild(NgDropdownDirective, { static: true }) public dropdown: NgDropdownDirective;
 
-    @Output() public cleared: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public cleared: EventEmitter<string>                     = new EventEmitter<string>();
     @Output() public selected: EventEmitter<StrippedAutocompleteGroup> = new EventEmitter<StrippedAutocompleteGroup>();
     // tslint:disable-next-line:no-output-rename
-    @Output('no-result') public noResult: EventEmitter<GroupNoResult> = new EventEmitter<GroupNoResult>();
+    @Output('no-result') public noResult: EventEmitter<GroupNoResult>  = new EventEmitter<GroupNoResult>();
 
     @Input() public group: AutocompleteGroup = <AutocompleteGroup>{};
 
-    _change: Subject<string> = new Subject<string>();
+    _change: Subject<string>                      = new Subject<string>();
     _items: { [value: string]: AutocompleteItem } = {};
-    _completer  = '';
-    _highlight  = '';
-    _disabled   = false;
+    _completer                                    = '';
+    _highlight                                    = '';
+    _disabled                                     = false;
 
     _DOM = {
-        notFound: <boolean>false,
-        empty: <boolean>false,
+        notFound   : <boolean>false,
+        empty      : <boolean>false,
         placeholder: <AutocompleteItem>null,
-        selected: <string>'',
-        isLoading: <boolean>false
+        selected   : <string>'',
+        isLoading  : <boolean>false
 
     };
+
+    asyncObservable = new Subject();
 
     constructor(private _zone: NgZone, private cdr: ChangeDetectorRef) {
     }
@@ -150,20 +151,24 @@ export class CompleterComponent implements OnInit {
      *
      */
     ngOnInit() {
-        this._zone.runOutsideAngular(() => {
-
-            this._change.pipe(
-                debounceTime(300))
-                .subscribe((value: string) => {
-                    this._zone.run(() => {
-                        if (this.group.async !== null) {
-                            this.RunAsyncFunction(value);
-                        } else {
-                            this.OnModelChange(value);
+        this._change.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap((value: string) => {
+                if (this.group.async !== null) {
+                    return this.RunAsyncFunction(value).pipe(switchMap((res) => {
+                        if (res !== null) {
+                            this.ListenToAsyncFunction(res.value, res.values);
                         }
-                    });
-                });
-        });
+                        return of(true);
+                    }));
+                } else {
+                    this.OnModelChange(value);
+                    return of(true);
+                }
+            })
+        )
+            .subscribe();
 
         this.SetItems();
     }
@@ -239,10 +244,10 @@ export class CompleterComponent implements OnInit {
     SelectItem(item: AutocompleteItem | string) {
         let i: AutocompleteItem;
         if (typeof item === 'string') {
-            i = this._items[item];
+            i                  = this._items[item];
             this._DOM.selected = item;
         } else {
-            i = item;
+            i                  = item;
             this._DOM.selected = SearchableAutoCompleteString(item.title, item.id);
         }
 
@@ -250,13 +255,26 @@ export class CompleterComponent implements OnInit {
         this._highlight = '';
 
         this.dropdown.Close(null, true);
-        this.selected.emit({group: {key: this.group.key}, item: i});
+        this.selected.emit({ group: { key: this.group.key }, item: i });
+    }
+
+    ListenToAsyncFunction(value: string, values: {id: string | number, [p: string]: any}[]) {
+        this.group.SetNewValue(values, this.group.keys.titleKey);
+
+        this._DOM.isLoading = false;
+
+        this._items = this.group.value;
+        this.EmptySearch(this._items, value);
+
+        // User has typed something now, results could be shown. We need to remove the "is-initial-empty" class.
+        this.IsInitialEmpty();
+        this.dropdown.Open();
     }
 
     /**
      *
      */
-    async RunAsyncFunction(value: string) {
+    RunAsyncFunction(value: string): Observable<{value: string, values: {id: string | number, [p: string]: any}[]}> {
         this._completer = value;
         this._highlight = value;
 
@@ -267,21 +285,15 @@ export class CompleterComponent implements OnInit {
             this.ClearModel();
 
             this.dropdown.Close('', true);
+            return of(null);
         } else if (value.length > this.group.searchLength) {
             this._DOM.isLoading = true;
 
-            const values = await this.group.async(value);
-            this.group.SetNewValue(values, this.group.keys.titleKey);
-
-            this._DOM.isLoading = false;
-
-            this._items = this.group.value;
-            this.EmptySearch(this._items, value);
-
-            // User has typed something now, results could be shown. We need to remove the "is-initial-empty" class.
-            this.IsInitialEmpty();
-            this.dropdown.Open();
-            this.cdr.detectChanges();
+            return new Observable((observer) => {
+                this.group.async(value).then(values => {
+                    observer.next({value, values});
+                });
+            });
         }
     }
 
@@ -389,14 +401,14 @@ export class CompleterComponent implements OnInit {
         }
 
         this._DOM.notFound = true;
-        this.noResult.emit({group: {key: this.group.key}, query: query});
+        this.noResult.emit({ group: { key: this.group.key }, query: query });
     }
 
     /**
      *
      */
     ClearValue() {
-        this._completer = '';
+        this._completer    = '';
         this._DOM.selected = null;
 
         this.group.InitialValue();
@@ -404,6 +416,6 @@ export class CompleterComponent implements OnInit {
         /**
          *
          */
-        this.selected.emit({group: {key: this.group.key}, item: null});
+        this.selected.emit({ group: { key: this.group.key }, item: null });
     }
 }

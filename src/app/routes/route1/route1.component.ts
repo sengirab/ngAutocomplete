@@ -138,7 +138,7 @@ export class Route1Component implements OnInit, AfterViewInit {
      */
     FillArray() {
         let arr = [];
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 50; i++) {
             arr.push({title: `Option ${i} Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, id: i});
         }
 
